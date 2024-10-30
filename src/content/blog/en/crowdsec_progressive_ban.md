@@ -1,61 +1,61 @@
 ---
-title: Динамическое увеличение времени блокировки в CrowdSec кратно трём
-description: Рассмотрим, как изменить выражение для динамического увеличения времени блокировки в CrowdSec, чтобы оно росло в три раза с каждым новым инцидентом.
+title: Dynamic Increase of Blocking Time in CrowdSec by a Factor of Three
+description: A guide on modifying the expression for dynamic increase in blocking time in CrowdSec, so that it triples with each new incident.
 tags:
   - CrowdSec
-  - безопасность
-  - настройка
+  - security
+  - configuration
 series: crowdsec
 pubDate: 10 11 2024
 ---
 
-# Динамическое увеличение времени блокировки в CrowdSec кратно трём
+# Dynamic Increase of Blocking Time in CrowdSec by a Factor of Three
 
-Занимаясь настройкой Crowdsec, я вспоминил функцию для f2ban, которая позволяла увеличивать прогрессивно время бана для повторных инцидентов с одного IP, и благодаря Deniom мы разобрались как это сделать.
+While configuring CrowdSec, I remembered a feature in f2ban that allowed for a progressive increase in ban time for repeated incidents from the same IP, and thanks to Deniom, we figured out how to set it up.
 
- По умолчанию в CrowdSec можно настроить динамическое время блокировки через параметр `duration_expr`/
+By default, CrowdSec allows dynamic blocking time configuration via the `duration_expr` parameter.
 
-## Изменение параметра duration_expr
+## Modifying the duration_expr Parameter
 
-Параметр `duration_expr` в CrowdSec позволяет задавать динамическое время блокировки, основываясь на количестве предыдущих решений для конкретного IP-адреса или диапазона. 
+The `duration_expr` parameter in CrowdSec enables you to set a dynamic blocking time based on the number of prior decisions for a specific IP address or range.
 
-Для корректировки этого параметра мне нужно было изменить файл `/etc/crowdsec/profiles.yaml`.
+To adjust this parameter, I needed to modify the `/etc/crowdsec/profiles.yaml` file.
 
-Вот как выглядело моя версия этой строки:
+Here’s what my version of this line looked like:
 
 ```yaml
 duration_expr: Sprintf('%dh', 8 * (3 ^ GetDecisionsCount(Alert.GetValue())))
 ```
 
-### Что делает эта строка?
+### What Does This Line Do?
 
-- **`GetDecisionsCount(Alert.GetValue())`** — функция, которая возвращает количество предыдущих решений для данного IP-адреса или диапазона.
-- **`3 ^ GetDecisionsCount(Alert.GetValue())`** — здесь 3 возводится в степень, равную количеству предыдущих решений. Это позволяет увеличить время блокировки в три раза с каждым новым инцидентом.
-- **`8 * (...)`** — базовое время блокировки составляет 8 часов, и оно умножается на результат возведения 3 в степень, что дает прогрессирующее увеличение времени блокировки.
+- **`GetDecisionsCount(Alert.GetValue())`** — a function that returns the number of prior decisions for the given IP address or range.
+- **`3 ^ GetDecisionsCount(Alert.GetValue())`** — here, 3 is raised to the power of the number of prior decisions. This allows the blocking time to triple with each new incident.
+- **`8 * (...)`** — the base blocking time is 8 hours, and it’s multiplied by the result of raising 3 to the power, creating a progressively increasing block duration.
 
-Таким образом, первая блокировка длится 8 часов, вторая — 24 часа (8 * 3), третья — 72 часа (8 * 9) и так далее.
+Thus, the first block lasts for 8 hours, the second for 24 hours (8 * 3), the third for 72 hours (8 * 9), and so on.
 
-## Зачем это нужно?
+## Why Is This Necessary?
 
-Такая настройка позволяет более жестко реагировать на повторные инциденты с одного и того же IP-адреса, повышая эффективность защиты. С каждым новым инцидентом время блокировки будет увеличиваться, что поможет удерживать злоумышленников от дальнейших попыток атаковать вашу систему.
+This configuration allows for a stricter response to repeated incidents from the same IP address, enhancing security. With each new incident, the blocking time increases, helping to deter attackers from further attempts against your system.
 
-## Где вносить изменения?
+## Where to Make the Changes
 
-Изменения нужно внести в файл профилей `/etc/crowdsec/profiles.yaml`. Откройте файл с помощью любимого текстового редактора (например, `nano`):
+You need to make changes in the profiles file `/etc/crowdsec/profiles.yaml`. Open the file with your preferred text editor (e.g., `nano`):
 
 ```bash
 sudo nano /etc/crowdsec/profiles.yaml
 ```
 
-Найдите блок, где определяется `duration_expr`, и замените его на строку, указанную выше. После сохранения файла перезапустите службу CrowdSec:
+Find the block where `duration_expr` is defined, and replace it with the line mentioned above. After saving the file, restart the CrowdSec service:
 
 ```bash
 sudo systemctl restart crowdsec
 ```
 
-Если после перезапуска не возникло никаких ошибок, значит все выполнено успешно!
+If no errors arise after restarting, then everything is set up successfully!
 
-### Полный пример моего файла /etc/crowdsec/profiles.yaml:
+### Full Example of My /etc/crowdsec/profiles.yaml File:
 
 ```yaml
 name: default_ip_remediation
@@ -80,23 +80,22 @@ decisions:
 
 duration_expr: Sprintf('%dh', 8 * (3 ^ GetDecisionsCount(Alert.GetValue())))
 
-
 on_success: break
 ```
 
-## Проверка изменений
+## Testing the Changes
 
-Чтобы убедиться, что все работает корректно, можно проверить логи CrowdSec и убедиться, что новые блокировки применяются с нужной длительностью.
+To verify everything is working correctly, you can check the CrowdSec logs and ensure new blocks are applied with the correct duration.
 
 ```bash
 sudo journalctl -u crowdsec -f
 ```
 
-Это даст вам возможность в реальном времени видеть, как CrowdSec применяет блокировки, и убедиться в правильности настроек.
+This allows you to monitor in real-time how CrowdSec applies blocks, ensuring the settings are correct.
 
-### Спустя время, можно понаблюдать за наличием самих банов
+### Over Time, You Can Observe the Blocks
 
-Для этого нужна команда:
+Use the following command:
 
 ```bash
 sudo cscli decisions list
@@ -104,5 +103,4 @@ sudo cscli decisions list
 
 ---
 
-Настройка увеличения времени блокировки в CrowdSec — это отличный способ сделать вашу защиту более адаптивной и надежной. Если у вас есть идеи, как еще можно усилить защиту, или вопросы по настройке, делитесь ими в комментариях!
-
+Configuring progressive blocking time in CrowdSec is an excellent way to make your security more adaptive and reliable. If you have any ideas for further strengthening security or questions about configuration, share them in the Telegram channel!
