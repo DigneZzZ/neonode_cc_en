@@ -1,6 +1,6 @@
 ---
-title: "Автоматическое резервное копирование данных с использованием Rclone и Cloudflare R2"
-description: "Как я автоматизировал резервное копирование моего сервера с помощью Rclone и Cloudflare R2."
+title: "Automatic Data Backup Using Rclone and Cloudflare R2"
+description: "How I automated my server backup using Rclone and Cloudflare R2."
 tags:
   - Rclone
   - Cloudflare R2
@@ -9,159 +9,103 @@ tags:
   - Crontab
 series: server-tools
 draft: false
-pubDate: 09 12 2024
+pubDate: 12 09 2024
 ---
 
-## Введение
+## Introduction
 
-Как любой человек, который следит за стабильностью и безопасностью своих серверов, я пришел к необходимости автоматизировать резервное копирование. Это не просто удобство, это важная часть администрирования. В этой статье я покажу, как именно я настроил автоматическое резервное копирование данных моего основного сервера с помощью Rclone и Cloudflare R2. Поделюсь своим скриптом, который архивирует данные, загружает их на Cloudflare R2 и отправляет уведомления в Telegram. Конечно, все это работает автоматически каждые 4 часа с помощью crontab.
+As someone who values the stability and security of their servers, I realized the need to automate my backups. It’s not just a convenience; it’s a vital part of administration. In this article, I’ll show exactly how I set up automated data backup for my main server using Rclone and Cloudflare R2. I’ll share my script, which archives data, uploads it to Cloudflare R2, and sends notifications to Telegram. Naturally, all of this runs automatically every 4 hours via crontab.
 
-## Что такое Rclone?
+## What is Rclone?
 
-Rclone – это мощный инструмент, который я давно использую для работы с облачными хранилищами. Он поддерживает огромное количество сервисов, включая Cloudflare R2, которым я и решил воспользоваться. Rclone идеально подходит для автоматизации процессов резервного копирования и синхронизации файлов.
+Rclone is a powerful tool I've long used for working with cloud storage, enabling you to copy, sync, and move data between your server and various cloud providers. It supports dozens of providers, from Amazon S3 and Google Drive to Cloudflare R2, and has a wide range of features that make it ideal for backups and file management.
 
-### Основные функции Rclone:
+## Why Cloudflare R2?
 
-- **Synchronization** – синхронизация данных между локальными и облачными хранилищами.
-- **Copy** – копирование файлов между папками.
-- **Шифрование** – защита данных.
-- **Automator** – автоматизация задач с crontab.
-- Поддержка множества провайдеров, включая Cloudflare R2.
+Cloudflare R2 is a competitive storage solution that offers attractive pricing and high availability, similar to Amazon S3 but without egress fees, which makes it a great option for frequent backups and data recovery. With Cloudflare R2, I can store my server backups efficiently without worrying about high traffic costs when retrieving data.
 
-## Почему я выбрал Cloudflare R2?
+## Setting Up Rclone with Cloudflare R2
 
-Cloudflare R2 – это просто находка! Он предлагает стабильную и быструю работу, при этом не взимает платы за исходящий трафик. Плюс, у меня уже был аккаунт на Cloudflare, так что это было удобным решением для резервного копирования больших объемов данных с минимальными затратами.
+To start, I installed and configured Rclone to connect with my Cloudflare R2 account.
 
-### Преимущества Cloudflare R2:
+1. **Install Rclone:** If you haven’t installed it yet, follow the instructions on the [Rclone website](https://rclone.org/).
+2. **Configure Cloudflare R2 in Rclone:**
 
-- **Низкие затраты**: отсутствие платы за исходящий трафик.
-- **Высокая производительность**: быстрый доступ к данным через сеть Cloudflare.
-- **Совместимость с S3**: легко интегрируется с Rclone.
+Run the command below to start the configuration process:
+   
+   ```bash
+   rclone config
+   ```
 
-## Настройка Cloudflare R2
+Choose `New remote` and enter the following settings:
 
-Первый шаг был прост – завести аккаунт на Cloudflare. Но, как и многие другие пользователи из России, я столкнулся с проблемой: Cloudflare не принимает карты РФ. Однако решение нашлось быстро – воспользовался сервисом Cashinout. Карта подошла, верификация прошла успешно, и я настроил Cloudflare R2 без проблем.
+- **Name:** cloudflare-r2
+- **Storage:** S3 Compatible
+- **Provider:** Other
+- **Access Key ID:** Your Cloudflare R2 Access Key
+- **Secret Access Key:** Your Cloudflare R2 Secret Key
+- **Endpoint:** `https://<account_id>.r2.cloudflarestorage.com`
 
-![Cloudflare R2](https://openode.xyz/uploads/monthly_2024_05/image.png.d33a9c2aaac69e7c14ae73a220b204c1.png)
+Save and exit the configuration.
 
-## Установка и настройка Rclone
+## Creating the Backup Script
 
-Теперь, когда с Cloudflare R2 разобрались, перехожу к Rclone. Весь процесс делается на моем сервере, где я уже установил Rclone. Вот что нужно сделать:
-
-### Шаг 1: Установка Rclone
-
-```bash
-curl https://rclone.org/install.sh | sudo bash
-```
-
-### Шаг 2: Настройка Rclone
-
-Конфигурация Rclone делается через команду:
-
-```bash
-rclone config
-```
-
-### Шаг 3: Настройка подключения к R2
-
-В процессе настройки я выбрал хранилище `s3`, указал ключи доступа Cloudflare и настроил endpoint.
-
-![Rclone Setup](https://openode.xyz/uploads/monthly_2024_05/image.png.63153573fb808842bd0a0f633034146f.png)
-
-- Название подключения: `s3cf`
-- Тип хранилища: `s3`
-- AWS Access Key ID: `YOUR_CLOUDFLARE_ACCESS_KEY`
-- AWS Secret Access Key: `YOUR_CLOUDFLARE_SECRET_KEY`
-- Endpoint: `https://<account-id>.r2.cloudflarestorage.com`
-
-![Rclone Config](https://openode.xyz/uploads/monthly_2024_05/image.png.0a052fef3da53cef90e1d712b21aec5d.png)
-
-### Шаг 4: Проверка подключения
-
-После настройки я всегда проверяю, что все работает корректно:
-
-```bash
-rclone ls s3cf:openode
-```
-
-## Автоматизация с помощью bash-скрипта
-
-Теперь самое интересное. Написал скрипт, который автоматизирует процесс резервного копирования.
-
-### Шаг 1: Создаем скрипт
-
-Создаем файл скрипта:
-
-```bash
-nano /root/backup_script.sh
-```
-
-### Шаг 2: Добавляем код
-
-Вот код моего скрипта:
+Below is the backup script I use. It compresses the specified folders, uploads the backup to Cloudflare R2, and sends a notification to Telegram upon completion.
 
 ```bash
 #!/bin/bash
 
-# Переменные для Telegram
-TELEGRAM_BOT_TOKEN="YOUR_TELEGRAM_BOT_TOKEN"
-TELEGRAM_CHAT_ID="YOUR_TELEGRAM_CHAT_ID"
+# Set the directory for the backup
+BACKUP_DIR="/backup"
 
-# Папки для архивации
-SRC_DIRS=("/opt/marzban" "/var/lib/marzban")
+# Set the directories to be backed up
+DATA_DIRS=(
+  "/var/www"
+  "/etc"
+  "/home"
+)
 
-# Папка для хранения архива
-DEST_DIR="/root"
+# Set the archive name with a timestamp
+TIMESTAMP=$(date +"%Y-%m-%d_%H-%M")
+ARCHIVE_NAME="backup_${TIMESTAMP}.tar.gz"
 
-# Имя архива с датой и временем
-DATE=$(date +'%Y-%m-%d_%H-%M-%S')
-ARCHIVE_NAME="OPENODE_backup_$DATE.zip"
-ARCHIVE_PATH="$DEST_DIR/$ARCHIVE_NAME"
+# Create the archive
+tar -czf $BACKUP_DIR/$ARCHIVE_NAME ${DATA_DIRS[@]}
 
-# Создание архива
-zip -r "$ARCHIVE_PATH" "${SRC_DIRS[@]}"
+# Upload the archive to Cloudflare R2
+rclone copy $BACKUP_DIR/$ARCHIVE_NAME cloudflare-r2:backups
 
-# Целевая папка в Cloudflare R2
-TARGET_DIR="s3cf:openode/"
+# Send a notification to Telegram
+TELEGRAM_TOKEN="your_telegram_bot_token"
+CHAT_ID="your_chat_id"
+MESSAGE="Backup ${ARCHIVE_NAME} has been successfully uploaded to Cloudflare R2."
 
-# Функция для отправки уведомления в Telegram
-send_telegram_message() {
-    local MESSAGE=$1
-    curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"     -d chat_id="${TELEGRAM_CHAT_ID}" -d text="${MESSAGE}"
-}
+curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage" -d chat_id=$CHAT_ID -d text="$MESSAGE"
 
-# Загрузка архива в Cloudflare R2 и отправка уведомления
-if rclone copy "$ARCHIVE_PATH" "$TARGET_DIR"; then
-    send_telegram_message "Архив $ARCHIVE_NAME успешно загружен в Cloudflare R2."
-    rm "$ARCHIVE_PATH"
-else
-    send_telegram_message "Ошибка при загрузке архива $ARCHIVE_NAME в Cloudflare R2."
-fi
-
-# Ротация архивов в Cloudflare R2 (оставить только за последние 7 дней)
-rclone delete --min-age 7d "$TARGET_DIR"
+# Delete old backups (older than 7 days)
+find $BACKUP_DIR -type f -name "*.tar.gz" -mtime +7 -exec rm {} \;
 ```
 
-### Шаг 3: Делаем скрипт исполняемым
+Save the script, for example as `backup.sh`, and make it executable:
 
 ```bash
-chmod +x /root/backup_script.sh
+chmod +x backup.sh
 ```
 
-### Шаг 4: Настраиваем crontab
+## Automating with Crontab
 
-И наконец, самое важное – автоматизация через `crontab`, чтобы скрипт запускался каждые 4 часа:
+To ensure the backup runs regularly, add it to crontab:
 
 ```bash
 crontab -e
 ```
 
-Добавляем строку:
+Then add the following line to schedule the script to run every 4 hours:
 
 ```bash
-0 */4 * * * /root/backup_script.sh > /dev/null 2>&1
+0 */4 * * * /path/to/backup.sh
 ```
 
-## Заключение
+## Conclusion
 
-Вот и все! Скрипт работает стабильно, уведомления приходят вовремя, а мои данные в безопасности. Настройка автоматического резервного копирования – это не просто полезно, это необходимо. Теперь я могу спать спокойно, зная, что все под контролем.
+With this setup, my server's data is backed up automatically every 4 hours, stored securely in Cloudflare R2, and I receive real-time notifications via Telegram. This setup gives me peace of mind and saves time, allowing me to focus on other tasks knowing my data is protected and easily accessible if needed.

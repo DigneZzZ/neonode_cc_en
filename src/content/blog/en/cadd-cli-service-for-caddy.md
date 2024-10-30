@@ -1,112 +1,112 @@
 ---
-title: Как создать утилиту командной строки для управления Caddy
-description: Руководство по созданию скрипта на Bash для управления сервером Caddy через удобные короткие команды.
+title: How to Create a Command-Line Utility to Manage Caddy
+description: A guide to creating a Bash script for managing the Caddy server with convenient short commands.
 tags:
   - bash
   - caddy
-  - автоматизация
-  - сервер
+  - automation
+  - server
 series: server-tools
 draft: false
-pubDate: 09 11 2024
+pubDate: 11 09 2024
 ---
 
-## Введение
+## Introduction
 
-Управление сервером Caddy можно сделать намного удобнее, написав небольшую утилиту командной строки, которая позволит выполнять часто используемые действия одной короткой командой. Например, вместо того чтобы каждый раз вводить длинные команды для редактирования конфигурационного файла, перезапуска, проверки состояния или валидации, можно создать скрипт, который всё это делает за вас.
+Managing the Caddy server can be much more convenient by writing a small command-line utility that allows you to perform frequently used actions with a single short command. For example, instead of entering lengthy commands each time to edit the configuration file, restart, check status, or validate, you can create a script that does all this for you.
 
-Эта статья покажет, как я создал простую утилиту на Bash, которую я назвал `Cadd`. Она помогает управлять Caddy через несколько сокращённых команд. Приведённые шаги детально объясняют, как настроить скрипт, сделать его исполняемым и использовать для повседневных задач.
+This article will show how I created a simple Bash utility called `Cadd`. It helps manage Caddy through a few shortened commands. The steps provided explain in detail how to set up the script, make it executable, and use it for everyday tasks.
 
-## Шаг 1: Создание файла скрипта
+## Step 1: Creating the Script File
 
-Первое, что нужно сделать, это создать файл, в котором будет размещён наш скрипт. Я решил назвать его `Cadd`, но вы можете выбрать любое другое имя. Этот файл будет размещён в директории `/usr/local/bin`, чтобы скрипт был доступен как системная команда.
+The first step is to create a file where our script will be stored. I decided to name it `Cadd`, but you can choose any name you prefer. This file will be located in the `/usr/local/bin` directory, so the script is available as a system command.
 
-Для создания файла выполните следующую команду:
+To create the file, run the following command:
 
 ```bash
 sudo nano /usr/local/bin/cadd
 ```
 
-### Почему именно эта директория?
+### Why This Directory?
 
-Директория `/usr/local/bin` является стандартным местом для пользовательских исполняемых файлов на Unix-подобных системах, таких как Linux и macOS. Она автоматически добавлена в переменную окружения `$PATH`, что позволяет запускать скрипты, находящиеся в этой директории, без указания полного пути.
+The `/usr/local/bin` directory is a standard location for user-executable files on Unix-like systems such as Linux and macOS. It's automatically added to the `$PATH` environment variable, allowing you to run scripts in this directory without specifying the full path.
 
-## Шаг 2: Написание самого скрипта
+## Step 2: Writing the Script
 
-Теперь давайте добавим код в файл `cadd`. Этот скрипт будет выполнять несколько ключевых операций: редактировать конфигурационный файл Caddy, перезапускать сервис, валидировать конфигурацию, проверять статус, выводить последние строки журнала и форматировать файл.
+Now let’s add code to the `cadd` file. This script will perform several key operations: editing the Caddy configuration file, restarting the service, validating the configuration, checking the status, outputting the last lines of the log, and formatting the file.
 
-### Код скрипта:
+### Script Code:
 
 ```bash
 #!/bin/bash
 
-CONFIG_FILE="/etc/caddy/Caddyfile" # Путь к файлу конфигурации Caddy
-LOG_LINES=20 # Количество строк журнала для вывода
+CONFIG_FILE="/etc/caddy/Caddyfile" # Path to the Caddy configuration file
+LOG_LINES=20 # Number of log lines to display
 
-# Цвета для вывода в консоль
+# Console output colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # Без цвета (сброс)
+NC='\033[0m' # No color (reset)
 
 case "$1" in
-    e) # Редактирование конфигурации
+    e) # Edit configuration
         nano "$CONFIG_FILE"
         ;;
-    r) # Рестарт сервиса Caddy
+    r) # Restart Caddy service
         systemctl restart caddy
-        echo -e "${GREEN}Caddy перезапущен.${NC}"
+        echo -e "${GREEN}Caddy restarted.${NC}"
         ;;
-    v) # Валидация конфигурационного файла
+    v) # Validate configuration file
         caddy validate --config "$CONFIG_FILE"
         ;;
-    s) # Статус сервиса Caddy
+    s) # Caddy service status
         systemctl status caddy | head -n 10
         ;;
-    l) # Логи сервиса Caddy
+    l) # Caddy service logs
         journalctl -u caddy.service -n "$LOG_LINES"
         ;;
-    f) # Форматирование Caddyfile
+    f) # Format Caddyfile
         caddy fmt --overwrite "$CONFIG_FILE"
-        echo -e "${GREEN}Файл ${YELLOW}$CONFIG_FILE${GREEN} был отформатирован.${NC}"
+        echo -e "${GREEN}File ${YELLOW}$CONFIG_FILE${GREEN} has been formatted.${NC}"
         ;;
-    h) # Вывод помощи
-        echo -e "${YELLOW}Использование:${NC}"
-        echo -e "${BLUE}cadd e${NC} - редактировать Caddyfile"
-        echo -e "${BLUE}cadd r${NC} - перезапустить Caddy"
-        echo -e "${BLUE}cadd v${NC} - проверить валидность Caddyfile"
-        echo -e "${BLUE}cadd s${NC} - статус Caddy"
-        echo -e "${BLUE}cadd l${NC} - показать последние ${LOG_LINES} строк логов Caddy"
-        echo -е "${BLUE}cadd f${NC} - форматировать файл ${CONFIG_FILE}"
-        echo -e "${BLUE}cadd h${NC} - показать помощь"
+    h) # Help output
+        echo -e "${YELLOW}Usage:${NC}"
+        echo -e "${BLUE}cadd e${NC} - edit Caddyfile"
+        echo -e "${BLUE}cadd r${NC} - restart Caddy"
+        echo -e "${BLUE}cadd v${NC} - validate Caddyfile"
+        echo -e "${BLUE}cadd s${NC} - Caddy status"
+        echo -e "${BLUE}cadd l${NC} - show the last ${LOG_LINES} lines of Caddy logs"
+        echo -e "${BLUE}cadd f${NC} - format the ${CONFIG_FILE} file"
+        echo -e "${BLUE}cadd h${NC} - show help"
         ;;
-    *) # Неправильный ввод команды
-        echo -e "${RED}Неправильная опция!${NC} Использование: cadd {e|r|v|s|l|h|f}"
+    *) # Invalid command input
+        echo -e "${RED}Invalid option!${NC} Usage: cadd {e|r|v|s|l|h|f}"
         ;;
 esac
 ```
 
-## Шаг 3: Предоставление прав на выполнение
+## Step 3: Making the Script Executable
 
-Чтобы скрипт мог быть выполнен, необходимо сделать его исполняемым. Для этого выполните следующую команду:
+To be able to execute the script, you need to make it executable. Run the following command:
 
 ```bash
 sudo chmod +x /usr/local/bin/cadd
 ```
 
-Теперь скрипт готов к использованию. Вы можете вызывать его как обычную команду с сокращёнными опциями для управления Caddy.
+The script is now ready for use. You can call it as a regular command with short options to manage Caddy.
 
-## Команды для управления Caddy через `Cadd`
+## Caddy Management Commands via `Cadd`
 
-- `cadd e` — откроет файл конфигурации Caddy (`/etc/caddy/Caddyfile`) в редакторе `nano` (можно заменить редактор на ваш любимый, если хотите).
-- `cadd r` — выполнит перезапуск сервиса Caddy.
-- `cadd v` — проверит валидность файла конфигурации Caddy.
-- `cadd s` — покажет текущий статус сервиса Caddy.
-- `cadd l` — выведет последние строки логов Caddy (по умолчанию 20).
-- `cadd f` — форматирует Caddyfile.
-- `cadd h` — выводит список доступных команд и справочную информацию.
+- `cadd e` — opens the Caddy configuration file (`/etc/caddy/Caddyfile`) in the `nano` editor (you can replace the editor with your favorite if you prefer).
+- `cadd r` — restarts the Caddy service.
+- `cadd v` — validates the Caddy configuration file.
+- `cadd s` — shows the current status of the Caddy service.
+- `cadd l` — outputs the last lines of the Caddy logs (default is 20).
+- `cadd f` — formats the Caddyfile.
+- `cadd h` — displays available commands and help information.
 
-## Заключение
+## Conclusion
 
-Создание утилиты `Cadd` значительно упростит процесс управления вашим сервером Caddy. Вместо того чтобы вводить длинные команды, вы можете использовать простые сокращения, что особенно полезно для администраторов, работающих с сервером на постоянной основе. Этот скрипт можно легко расширить, добавив новые функции в зависимости от ваших нужд.
+Creating the `Cadd` utility significantly simplifies managing your Caddy server. Instead of typing long commands, you can use simple shortcuts, which is especially helpful for administrators who work with the server regularly. This script can easily be expanded by adding new functions based on your needs.
