@@ -3,6 +3,9 @@ export default {
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
 	darkMode: "class",
 	theme: {
+		fontSize: {
+			'1.05rem': ['1.05rem', {lineHeight: '1.75rem'}]
+		  },
 		fontFamily: {
 			'mono': ['Anonymous Pro']
 		},
