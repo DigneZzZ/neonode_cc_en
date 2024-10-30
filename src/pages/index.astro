@@ -1,4 +1,14 @@
 ---
 import { DEFAULT_LANG } from "src/consts";
-return Astro.redirect(`/${DEFAULT_LANG}/`);
+//return Astro.redirect(`/${DEFAULT_LANG}/`);
+
+export async function get() {
+  return new Response(null, {
+    status: 302,
+    headers: {
+      "Location": `/${DEFAULT_LANG}/`
+    }
+  });
+}
 ---
+
