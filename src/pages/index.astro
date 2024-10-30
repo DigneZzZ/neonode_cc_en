@@ -7,7 +7,9 @@ import { DEFAULT_LANG } from "src/consts";
   <head>
     <meta http-equiv="refresh" content={`0; url=/${DEFAULT_LANG}/`} />
     <script>
-      window.location.replace(`/${DEFAULT_LANG}/`);
+      // Используем значение DEFAULT_LANG, переданное Astro
+      const lang = `${DEFAULT_LANG}`;
+      window.location.replace(`/${lang}/`);
     </script>
   </head>
   <body>
