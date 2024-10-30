@@ -9,10 +9,10 @@ import type { SupportedLanguage } from "src/utils/i18n";
 export default {
     "en": {
         "site.title": {
-            text: "Astro Theme Cody"
+            text: "Neonode.cc - Mind space blog"
         },
         "site.description": {
-            text: "A minimalist blog theme built with Astro. A quick and easy starter build for anyone who wants to start their own blog."
+            text: "IT Blog"
         },
         "profile.description": {
             text: "your bio description"
@@ -35,28 +35,28 @@ export default {
     },
     "ru": {
         "site.title": {
-            text: "Astro Theme Cody"
+            text: "Neonode.cc - Mind space blog"
         },
         "site.description": {
-            text: "Un tema de blog minimalista creado con Astro. Un tema de inicio rápido y sencillo para cualquiera que quiera crear su propio blog."
+            text: "IT Blog"
         },
         "profile.description": {
-            text: "tu descripción biográfica"
+            text: "Digital content creater"
         },
         "blog.lastUpdated": {
-            text: "Última actualización:"
+            text: "Последнее обновление:"
         },
         "sidebar.tableOfContents": {
-            text: "Tabla de contenidos"
+            text: "Таблица контента"
         },
         "project.platform": {
-            text: "PLATAFORMA"
+            text: "ПЛАТФОРМА"
         },
         "project.stack": {
-            text: "PILA"
+            text: "СТЭК"
         },
         "project.website": {
-            text: "WEBSITE"
+            text: "ВЕБСАЙТ"
         }
     }
 } as const satisfies TranslationUIEntries;

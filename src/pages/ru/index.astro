@@ -17,88 +17,62 @@ const allPostsByPinned = sortMDByPinned(allPostsByDate);
 const filteredPostsByLanguage = filterByLanguage(allPostsByPinned, "ru");
 
 const tech: Array<{ title: string; desc: string; href: string }> = [
-	{
-		title: "Astro",
-		desc: "Crea sitios web rápidos, más rápido.",
-		href: "https://astro.build",
-	},
-	{
-		title: "Astro Assets",
-		desc: "Compatibilidad con activos optimizados integrados.",
-		href: "https://docs.astro.build/en/guides/assets/",
-	},
-	{
-		title: "Tailwind CSS",
-		desc: "Crea sitios web modernos rápidamente sin tener que abandonar el HTML.",
-		href: "https://tailwindcss.com",
-	},
-	{
-		title: "Markdown",
-		desc: "Lenguaje de marcado simple y fácil de usar.",
-		href: "https://www.markdownguide.org/",
-	},
-	{
-		title: "MDX",
-		desc: "Markdown para la era de los componentes.",
-		href: "https://mdxjs.com/",
-	},
-	{
-		title: "Astro Icon",
-		desc: "Un componente de ícono fácil de usar para Astro.",
-		href: "https://github.com/natemoo-re/astro-icon#readme",
-	},
+{
+		title: "Openode.xyz",
+		desc: "Наше сообщество",
+		href: "https://openode.xyz",
+	}
 ];
 ---
 
-<BaseLayout title="Home">
-	<section>
-		<h1 class="title">Hello World</h1>
+<BaseLayout title="Главная">
+	<header>
+		
+	  </header>
+	<section class="mt-8 sm:mt-16">
+		<h2 class="title">О проекте NeoNode</h2>
 		<p class="mb-4 sm:mb-8">
-			¡Hola a todos! Este es un tema para Astro. Pueden usarlo como blog
-			personal o portafolio. Si quieren saber más sobre cómo
-			personalizarlo y hacerlo suyo, hagan clic en el enlace del ícono de
-			Github que aparece a continuación y los llevará al repositorio.
+			<strong>NeoNode</strong> — это динамичный проект, нацеленный на предоставление полезных статей, скриптов и уникальных ИТ-решений для широкого круга пользователей. Мы развиваем наш блог, открытый форум, и <a href="https://t.me/neonode_cc" target="_blank" class="cody-link">Telegram-канал</a>, где делимся опытом, наработками и полезными материалами.
+		</p>
+		<p class="mb-4 sm:mb-8">
+			Проект ориентирован на расширение аудитории, предлагая статьи на нескольких языках и имея собственный <a href="https://t.me/+cFdHT8DiMUA2MWVi" target="_blank" class="cody-link">Telegram-community</a>.
+			<br />
+			Также подписывайтесь на <a href="https://t.me/neonode_cc" target="_blank" class="cody-link">Telegram канал NeoNode.cc</a>.
+		</p>
+		<p class="mb-4 sm:mb-8">
+			Присоединяйтесь к NeoNode и следите за новостями о наших последних разработках, включая поддержку <a href="https://openode.xyz" target="_blank" class="cody-link">Openode.xyz</a> и предстоящий запуск <a href="https://neonode.cc/projects/msaas" target="_blank" class="cody-link">Marzban SaaS</a>.
 		</p>
 		<div>
-			<span>Puedes encontrarme en:</span>
-			<SocialMediaLinks />
+			<span>Найти меня можно здесь: </span>
+			<SocialMediaLinks/>
 		</div>
 	</section>
 
 	<section class="mt-8 sm:mt-16">
-		<h2 class="title">Posts</h2>
+		<h2 class="title">Статьи</h2>
 		<ul class="space-y-4 sm:space-y-2">
-			{
-				filteredPostsByLanguage.map((p) => (
-					<PostPreview post={p as CollectionEntry<"blog">} />
-				))
-			}
+			{allPostsByPinned.map(p => <PostPreview post={p}/>)}
 		</ul>
 	</section>
 
-	<section class="mt-16 mb-4">
-		<h2 class="title">Technologies</h2>
-		<ul class="space-y-4 sm:space-y-2">
-			{
-				tech.map(({ href, title, desc }) => (
-					<li>
-						<a
-							href={href}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="cody-link inline-block"
-						>
-							{title}
-						</a>
-						: <p class="inline-block sm:mt-2">{desc}</p>
-					</li>
-				))
-			}
-		</ul>
-	</section>
-
-	<hr />
-	<section class="">
-		<p>Esto fue traducido usando Google Translate</p>
-	</section>
+	<section class="mt-16">
+			<h2 class="title">Полезные ссылки</h2>
+			<ul class="space-y-4 sm:space-y-2">
+				{
+					tech.map(({ href, title, desc }) => (
+						<li>
+							<a
+								href={href}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="cody-link inline-block"
+							>
+								{title}
+							</a>: 
+							<p class="inline-block sm:mt-2">{desc}</p>
+						</li>
+					))
+				}
+			</ul>
+		</section>
 </BaseLayout>
