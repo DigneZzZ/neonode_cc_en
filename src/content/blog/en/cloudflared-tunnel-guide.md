@@ -1,95 +1,95 @@
 ---
-title: Запуск Cloudflare Tunnel на сервере
-description: Подробное руководство по установке и настройке Cloudflare Tunnel (ранее Argo Tunnel) для защиты вашего сервера.
+title: Running Cloudflare Tunnel on Your Server
+description: A detailed guide on installing and configuring Cloudflare Tunnel (formerly Argo Tunnel) to secure your server.
 tags:
   - cloudflare
-  - туннель
-  - сервер
-  - безопасность
+  - tunnel
+  - server
+  - security
 series: server-guides
 draft: false
 pubDate: 09 11 2024
 ---
 
-## Введение
+## Introduction
 
-Cloudflare Tunnel (ранее Argo Tunnel) — это мощный инструмент для создания безопасного подключения между вашим сервером и Cloudflare, без необходимости открывать публичные порты. В этом руководстве описаны шаги по установке и настройке Cloudflare Tunnel на различных операционных системах.
+Cloudflare Tunnel (formerly Argo Tunnel) is a powerful tool for creating a secure connection between your server and Cloudflare without the need to open public ports. This guide describes the steps to install and configure Cloudflare Tunnel on various operating systems.
 
-## Шаги по настройке
+## Setup Steps
 
-### 1. Установка Cloudflare Tunnel (Cloudflared)
+### 1. Installing Cloudflare Tunnel (Cloudflared)
 
-Для начала необходимо установить `cloudflared` на ваш сервер. В зависимости от используемой операционной системы, выполните следующие команды:
+First, you need to install `cloudflared` on your server. Depending on the operating system you are using, run the following commands:
 
-**Для Ubuntu/Debian:**
+**For Ubuntu/Debian:**
 
 ```bash
 wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
 sudo dpkg -i cloudflared-linux-amd64.deb
 ```
 
-**Для CentOS/RHEL:**
+**For CentOS/RHEL:**
 
 ```bash
 wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.rpm
 sudo rpm -ivh cloudflared-linux-amd64.rpm
 ```
 
-**Для macOS:**
+**For macOS:**
 
 ```bash
 brew install cloudflare/cloudflare/cloudflared
 ```
 
-### 2. Авторизация в Cloudflare
+### 2. Authorization in Cloudflare
 
-Для настройки туннеля вам необходимо войти в ваш аккаунт Cloudflare. Выполните следующую команду для авторизации:
+To set up the tunnel, you need to log into your Cloudflare account. Run the following command for authorization:
 
 ```bash
 cloudflared login
 ```
 
-Эта команда откроет браузер, где вы сможете войти в ваш аккаунт Cloudflare. После успешной авторизации файл конфигурации с токеном будет создан автоматически.
+This command will open a browser window where you can log into your Cloudflare account. After successful authorization, a configuration file with a token will be created automatically.
 
-### 3. Создание туннеля
+### 3. Creating the Tunnel
 
-После авторизации вы можете создать туннель:
-
-```bash
-cloudflared tunnel create <имя_туннеля>
-```
-
-Это создаст уникальный туннель с указанным вами именем. Сохраните идентификатор туннеля — он понадобится вам позже.
-
-### 4. Настройка DNS
-
-Теперь вам нужно настроить DNS-запись для связывания вашего домена с туннелем:
+After authorization, you can create the tunnel:
 
 ```bash
-cloudflared tunnel route dns <имя_туннеля> example.com
+cloudflared tunnel create <tunnel_name>
 ```
 
-Замените `example.com` на ваш реальный домен.
+This will create a unique tunnel with the name you specify. Save the tunnel ID — you'll need it later.
 
-### 5. Запуск туннеля
+### 4. Configuring DNS
 
-После настройки DNS можно запустить туннель командой:
+Now you need to set up a DNS record to link your domain with the tunnel:
 
 ```bash
-cloudflared tunnel run <имя_туннеля>
+cloudflared tunnel route dns <tunnel_name> example.com
 ```
 
-### 6. Автоматизация запуска туннеля
+Replace `example.com` with your actual domain.
 
-Чтобы обеспечить автоматический запуск туннеля при старте системы, настройте systemd-сервис.
+### 5. Running the Tunnel
 
-Создайте файл для systemd:
+After configuring DNS, you can start the tunnel with the following command:
+
+```bash
+cloudflared tunnel run <tunnel_name>
+```
+
+### 6. Automating Tunnel Startup
+
+To ensure the tunnel starts automatically when the system boots, configure a systemd service.
+
+Create a file for systemd:
 
 ```bash
 sudo nano /etc/systemd/system/cloudflared.service
 ```
 
-Добавьте в файл следующий код:
+Add the following code to the file:
 
 ```ini
 [Unit]
@@ -99,22 +99,22 @@ After=network.target
 [Service]
 Type=simple
 User=root
-ExecStart=/usr/local/bin/cloudflared tunnel run <имя_туннеля>
+ExecStart=/usr/local/bin/cloudflared tunnel run <tunnel_name>
 Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-Сохраните файл и закройте редактор.
+Save the file and close the editor.
 
-Активируйте и запустите сервис:
+Enable and start the service:
 
 ```bash
 sudo systemctl enable cloudflared
 sudo systemctl start cloudflared
 ```
 
-## Заключение
+## Conclusion
 
-Теперь ваш Cloudflare Tunnel автоматически запускается при включении сервера, защищая его от внешних угроз. Это отличный способ улучшить безопасность вашего сервера, используя преимущества инфраструктуры Cloudflare.
+Now your Cloudflare Tunnel starts automatically when the server boots, protecting it from external threats. This is a great way to enhance your server's security by leveraging Cloudflare's infrastructure.
