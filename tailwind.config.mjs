@@ -4,7 +4,7 @@ export default {
 	darkMode: "class",
 	theme: {
 		fontFamily: {
-			'mono': ['Space Mono', 'monospace']
+			'mono': ['Anonymous Pro']
 		},
 		extend: {
 			colors: {
