@@ -29,7 +29,7 @@ export const SUPPORTED_LANGUAGES = {
   'ru': 'ru'
 };
 
-export const DEFAULT_LANG = SUPPORTED_LANGUAGES.en as SupportedLanguage;
+export const DEFAULT_LANG = SUPPORTED_LANGUAGES.ru as SupportedLanguage;
 
 export const siteConfig: Config = {
   title: ui[DEFAULT_LANG]["site.title"].text,
