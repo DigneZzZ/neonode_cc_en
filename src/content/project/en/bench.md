@@ -11,7 +11,7 @@ order: 3
 ---
 
 
-### This script is designed to run various benchmark tests on your system  (incl: i\o speed, speedtest to dif servers). To use the script, simply execute the following command:
+## This script is designed to run various benchmark tests on your system  (incl: i\o speed, speedtest to dif servers). To use the script, simply execute the following command:
 
 ```bash
 wget -qO- bench.openode.xyz | bash
