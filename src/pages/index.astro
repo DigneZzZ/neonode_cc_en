@@ -1,5 +1,10 @@
-import { DEFAULT_LANG } from "src/consts";
+import { DEFAULT_LANG } from "../src/consts"; // убедитесь, что путь корректен
 
-export async function get({ redirect }) {
-  redirect(`/${DEFAULT_LANG}/`, 302);
+export async function get() {
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: `/${DEFAULT_LANG}/`,
+    },
+  });
 }
