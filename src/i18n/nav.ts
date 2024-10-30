@@ -41,35 +41,35 @@ export default {
             slug: "series"
         }
     },
-    "es": {
+    "ru": {
         "home": {
-            text: "Página Principal",
+            text: "Главная",
             slug: ""
         },
         "about": {
-            text: "Acerca De",
+            text: "О проекте",
             slug: "about"
         },
         "blog": {
-            text: "Blog",
+            text: "Блог",
             slug: "blog",
             route: "/blog/pages/1"
         },
         "projects": {
-            text: "Proyectos",
+            text: "Проекты",
             slug: "projects",
             route: "/projects/pages/1"
         },
         "archive": {
-            text: "Archivo",
+            text: "Архив",
             slug: "archive"
         },
         "tags": {
-            text: "Etiquetas",
+            text: "Тэги",
             slug: "tags"
         },
         "series": {
-            text: "Serie",
+            text: "Серии",
             slug: "series"
         }
     }

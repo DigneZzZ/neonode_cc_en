@@ -1,0 +1,71 @@
+<section class="cody-bg space-y-1 sm:space-y-2">
+    <!-- Разделитель -->
+    <hr class="my-2" />
+  
+    <!-- Контент подписи -->
+    <ul class="space-y-1">
+      <li class="signature-item">
+        <small>Сообщество OpeNode</small>
+        <a href="https://openode.xyz" target="_blank" class="cody-link">OpeNode.xyz</a>
+      </li>
+      <li class="signature-item">
+        <small>Сервера Aeza (+15% к пополнению)</small>
+        <a href="https://aeza.net/?ref=377137" target="_blank" class="cody-link">Aeza.net</a>
+      </li>
+      <li class="signature-item">
+        <small>Лучший EU хостер (<b>1 MONTH FREE</b>)</small>
+        <a href="https://go.cloudwm.com/visit/?bta=36601&nci=5737" target="_blank" class="cody-link">Kamatera.com</a>
+      </li>
+      <li class="signature-item">
+        <small>Хостер 4VPS (10% discount)</small>
+        <a href="https://4vps.su/r/p52GUJhPv8b5" target="_blank" class="cody-link">4VPS.su</a>
+      </li>
+      <!-- Добавьте другие ссылки по необходимости -->
+    </ul>
+  </section>
+  
+  <style>
+    small {
+      @apply text-bgColor px-1 bg-accent mr-1 font-semibold min-w-[75px];
+    }
+  
+    .signature-item {
+      @apply flex flex-col gap-x-0 sm:flex-row items-start;
+      @apply text-sm; /* Уменьшить размер шрифта */
+    }
+  
+    .cody-link {
+      @apply no-underline text-accent;
+      position: relative;
+      background-image: linear-gradient(
+        transparent,
+        transparent 70%,
+        var(--theme-accent) 70%,
+        var(--theme-accent) 75%,
+        transparent 75%
+      );
+      background-repeat: no-repeat;
+      background-size: 100% 1px;
+      transition: background-size 0.3s ease-in-out;
+    }
+  
+    .cody-link:hover {
+      background-size: 100% 100%;
+      color: var(--theme-accent-2);
+    }
+  
+    .cody-link::before {
+      content: "→ ";
+      color: var(--theme-accent);
+      transition: color 0.3s ease-in-out;
+    }
+  
+    .cody-link:hover::before {
+      color: var(--theme-accent-2);
+    }
+  
+    hr {
+      @apply border-accent border-dashed my-4;
+    }
+  </style>
+  

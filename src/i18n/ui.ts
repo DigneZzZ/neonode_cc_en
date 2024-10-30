@@ -33,7 +33,7 @@ export default {
             text: "WEBSITE"
         }
     },
-    "es": {
+    "ru": {
         "site.title": {
             text: "Astro Theme Cody"
         },
