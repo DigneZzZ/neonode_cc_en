@@ -69,6 +69,42 @@
   * CSS for markdown and MDX blog posts
   */
 
+
+  .prose-cody pre {
+    @apply text-1.05rem !important;
+  }
+
+  .prose-cody p {
+    font-size: 1rem; /* Пример размера для текста внутри параграфов */
+    line-height: 1.75rem;
+  }
+  
+  .prose-cody h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+  
+  .prose-cody h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .prose-cody h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  .prose-cody h4 {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .prose-cody h5 {
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+  .prose-cody h6 {
+    font-size: 0.75rem;
+    font-weight: 400;
+  }
   .prose-cody blockquote {
     @apply text-quote border-l-0;
   }
