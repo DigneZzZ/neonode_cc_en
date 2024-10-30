@@ -1,4 +1,5 @@
----
 import { DEFAULT_LANG } from "src/consts";
-return Astro.redirect(`/${DEFAULT_LANG}/`);
----
+
+export async function get({ redirect }) {
+  redirect(`/${DEFAULT_LANG}/`, 302);
+}
