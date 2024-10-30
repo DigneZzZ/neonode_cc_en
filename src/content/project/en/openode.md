@@ -1,6 +1,6 @@
 ---
 title: 'Openode.xyz'
-description: 'Сообщество посвященное цифровому миру, домашним сетям'
+description: 'A community dedicated to the digital world, home networks, and technology'
 pubDate: '09 10 2024'
 heroImage:
     url: '/blog-placeholder-about.jpg'
@@ -11,39 +11,39 @@ tgGroup: https://t.me/+v8dK84LYCAhmOTcy
 order: 1
 ---
 
-На форуме [openode.xyz](https://openode.xyz) обсуждаются различные темы, связанные с IT, программированием и технологиями. Популярные категории включают:
+On the forum [openode.xyz](https://openode.xyz), various topics related to IT, programming, and technology are discussed. Popular categories include:
 
-1. **Операционные системы и программное обеспечение**  
-   Здесь обсуждаются Linux, Windows, MacOS и Proxmox, а также различные вопросы настройки и использования этих систем.
+1. **Operating Systems and Software**  
+   Covers discussions on Linux, Windows, macOS, and Proxmox, as well as various configuration and usage questions for these systems.
 
-2. **Домашняя инфраструктура**  
-   Охватывает такие темы, как умные дома, NAS (сетевые хранилища данных), Wi-Fi и безопасность, с большим количеством практических статей и рекомендаций.
+2. **Home Infrastructure**  
+   Encompasses topics such as smart homes, NAS (network-attached storage), Wi-Fi, and security, with a wealth of practical articles and recommendations.
 
-3. **Программирование и архитектура**  
-   Включает обсуждения языков программирования, архитектурных решений и методов разработки ПО. Например, статьи по созданию ботов на Python с использованием Docker и VPS.
+3. **Programming and Architecture**  
+   Includes discussions on programming languages, architectural solutions, and software development methods. For example, articles on creating Python bots using Docker and VPS.
 
-4. **Искусственный интеллект**  
-   Одна из наиболее популярных тем, посвящена машинному обучению, нейронным сетям, обработке естественного языка и робототехнике.
+4. **Artificial Intelligence**  
+   One of the most popular topics, covering machine learning, neural networks, natural language processing, and robotics.
 
-5. **OSINT (разведка по открытым источникам)**  
-   Обсуждаются методики поиска и анализа информации из общедоступных источников с акцентом на информационную безопасность и легальные аспекты.
-6. **Подписка на доступ к клубам**
-   Пожалуй, самое полезное и актуальное сейчас - это доступ к клубам с закрытой информацией. 
-   В клубах представлено очень много полезного.
+5. **OSINT (Open Source Intelligence)**  
+   Discusses techniques for searching and analyzing information from public sources with a focus on information security and legal aspects.
 
-Форум активно развивается и поддерживает подписки для доступа к специальным клубам, например, по установке и настройке различных панелей, таких как Marzban. Подробнее можно узнать на [GitHub](https://dignezzz.github.io/) или непосредственно на [openode.xyz](https://openode.xyz) форумах.
+6. **Subscription-Based Access to Clubs**  
+   Arguably the most valuable feature, this includes access to exclusive clubs with specialized information. These clubs offer a wealth of useful resources.
 
-На форуме [openode.xyz](https://openode.xyz) помимо основных обсуждений, есть платные закрытые клубы, доступ к которым предоставляется по подписке. Один из самых популярных — клуб, посвящённый панели **Marzban**. 
+The forum is actively expanding and offers subscriptions for access to special clubs, such as one on installing and configuring various panels like Marzban. More information can be found on [GitHub](https://dignezzz.github.io/) or directly on the [openode.xyz](https://openode.xyz) forums.
 
-В клубе регулярно публикуются статьи, которые охватывают все аспекты настройки и использования панели, от установки до оптимизации производительности сервера. Среди самых последних добавленных материалов:
-- Полная установка Marzban с нуля.
-- Интеграция базы данных MySQL.
-- Автоматизация резервного копирования через Telegram-бота.
-- Настройка ограничений для пользователей и узлов (Node) с повышенной безопасностью.
-- Использование Haproxy для работы на единственном порте (443).
-- Много других полезных статей!
+On [openode.xyz](https://openode.xyz), in addition to general discussions, there are paid, exclusive clubs accessible by subscription. One of the most popular is dedicated to the **Marzban** panel.
 
-Данный клуб предлагает обширные инструкции по настройке панели, включая балансировку трафика и роутинг через разные поддомены. Для удобства и безопасности также предлагаются решения с использованием FastPanel и обратного прокси. Все это делает клуб незаменимым для пользователей, ищущих глубинные знания по Marzban и связанным технологиям.
+In the club, articles are regularly published covering all aspects of setting up and using the panel, from installation to performance optimization. Among the latest additions:
 
-Больше информации о доступных подписках и статьях можно найти на [форуме](https://openode.xyz/subscriptions/).
+- Full Marzban installation from scratch.
+- MySQL database integration.
+- Automated backup via Telegram bot.
+- Setting up user and node restrictions with enhanced security.
+- Using Haproxy to work on a single port (443).
+- Many other useful articles!
 
+This club offers comprehensive instructions for panel setup, including traffic balancing and routing through different subdomains. For convenience and security, solutions using FastPanel and reverse proxies are also offered. All this makes the club invaluable for users seeking in-depth knowledge on Marzban and related technologies.
+
+More information about available subscriptions and articles can be found on the [forum](https://openode.xyz/subscriptions/).

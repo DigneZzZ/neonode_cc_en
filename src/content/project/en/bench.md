@@ -1,6 +1,6 @@
 ---
 title: 'Bench.Openode.xyz'
-description: 'Постоянно актуализируемый набор бенчмарков'
+description: 'Most usefull benchmarks for your VPS server'
 pubDate: '09 10 2024'
 heroImage:
     url: '/images/bench.webp'
@@ -10,7 +10,6 @@ website: https://bench.openode.xyz
 order: 3
 ---
 
-## На странице представлены все основные и популярные бенчмарки для тестирование доступности серверов.
 
 ### This script is designed to run various benchmark tests on your system  (incl: i\o speed, speedtest to dif servers). To use the script, simply execute the following command:
 

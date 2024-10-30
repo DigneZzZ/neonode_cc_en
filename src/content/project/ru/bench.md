@@ -12,7 +12,6 @@ order: 3
 
 ## На странице представлены все основные и популярные бенчмарки для тестирование доступности серверов.
 
-### This script is designed to run various benchmark tests on your system  (incl: i\o speed, speedtest to dif servers). To use the script, simply execute the following command:
 
 ```bash
 wget -qO- bench.openode.xyz | bash
