@@ -70,9 +70,7 @@
   */
 
 
-  .prose-cody pre {
-    @apply text-1.05rem !important;
-  }
+ 
 
   .prose-cody p {
     font-size: 1rem; /* Пример размера для текста внутри параграфов */
