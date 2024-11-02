@@ -14,6 +14,9 @@ import {
 	type SupportedLanguage,
 } from "@/utils";
 import { siteConfig } from "src/consts";
+import { getLangFromUrl, useUITranslations } from "@/utils";
+const lang = getLangFromUrl(Astro.url);
+const translate = useUITranslations(lang);
 
 export const getStaticPaths = (async ({ paginate }) => {
 	// grab all posts besides drafts and hidden ones
@@ -93,19 +96,19 @@ const paginationProps = {
 						<path d="M17.573 18.407l2.834 -2.834a2.025 2.025 0 0 0 0 -2.864l-7.117 -7.116" />
 						<path d="M6 9h-.01" />
 					</svg>
-					Tags
+					Tags1111
 				</h2>
 				<ul class="flex gap-2 flex-wrap mb-4">
 					{tags.map((tag) => (
 						<li class="tag">
-							<a href={`/tags/${tag}`} aria-label={`tag: ${tag}`}>
+							<a href={`/${lang}/tags/${tag}`} aria-label={`tag: ${tag}`}>
 								{tag}
 							</a>
 						</li>
 					))}
 				</ul>
 				<a
-					href="/tags"
+					href={`/${lang}/tags/`}
 					class="cody-link"
 					aria-label="View all blog tags"
 				>
