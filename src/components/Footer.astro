@@ -4,6 +4,15 @@ import { NAV_LINKS, siteConfig } from "../consts.ts";
 const year = new Date().getFullYear();
 const lang = getLangFromUrl(Astro.url);
 const t = useNavTranslations(lang);
+import type { NavEntry } from "@/i18n/nav";
+
+function buildNavLink(nav: string, entry: NavEntry): string {
+	if (entry.route) {
+		return `/${lang}${entry.route}`;
+	}
+
+	return `/${lang}${nav != "home" ? `/${entry.slug}/` : "/"}`;
+}
 ---
 
 <footer
@@ -17,18 +26,27 @@ const t = useNavTranslations(lang);
 		aria-label="More on this site"
 		class="sm:flex sm:divide-x sm:divide-accent"
 	>
-		{
-			NAV_LINKS.map((link) => {
-				const translation = t(link);
-				return (
-					<a
-						href={`/${lang}/${translation.slug}`}
-						class="px-2 py-0 hover:text-textColor hover:underline sm:px-4 sm:py-1 text-center"
-					>
-						{translation.text}
-					</a>
-				);
-			})
-		}
+		
+	{
+		NAV_LINKS.map((nav) => {
+			const translation = t(nav);
+			return (
+				<HeaderLink
+					class="px-2 py-0 hover:text-textColor hover:underline sm:px-4 sm:py-1 text-center"
+					href={buildNavLink(nav, translation)}
+					title={translation.text}
+					aria-current={
+						url.pathname === translation.slug
+							? "page"
+							: false
+					}
+					data-astro-prefetch
+				>
+					{translation.text}
+				</HeaderLink>
+			);
+		})
+	}
+		
 	</nav>
 </footer>
