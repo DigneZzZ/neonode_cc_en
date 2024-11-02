@@ -31,7 +31,7 @@ function buildNavLink(nav: string, entry: NavEntry): string {
 		NAV_LINKS.map((nav) => {
 			const translation = t(nav);
 			return (
-				<HeaderLink
+				<a
 					class="px-2 py-0 hover:text-textColor hover:underline sm:px-4 sm:py-1 text-center"
 					href={buildNavLink(nav, translation)}
 					title={translation.text}
@@ -43,7 +43,7 @@ function buildNavLink(nav: string, entry: NavEntry): string {
 					data-astro-prefetch
 				>
 					{translation.text}
-				</HeaderLink>
+				</a>
 			);
 		})
 	}
