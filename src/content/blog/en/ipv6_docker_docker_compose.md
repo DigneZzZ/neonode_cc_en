@@ -1,44 +1,44 @@
 ---
-title: Как настроить сеть IPv6 в Docker и Docker Compose
-description: Полное руководство по включению IPv6 в Docker и настройке сети с поддержкой IPv6 через Docker Compose для современных приложений.
+title: How to Set Up IPv6 Networking in Docker and Docker Compose
+description: A comprehensive guide to enabling IPv6 in Docker and configuring IPv6-supported networks with Docker Compose for modern applications.
 tags:
   - docker
   - ipv6
-  - сеть
+  - network
   - docker-compose
-  - инфраструктура
-  - контейнеры
+  - infrastructure
+  - containers
 series: networking
 draft: false
 pubDate: 09 11 2024
 ---
 
-# Настройка сети IPv6 в Docker и Docker Compose
+# Configuring IPv6 Networking in Docker and Docker Compose
 
-С ростом интернет-устройств и увеличением количества подключений, IPv6 становится всё более актуальным. В этой статье я покажу, как включить поддержку IPv6 в Docker и Docker Compose, чтобы обеспечить масштабируемость и подготовить инфраструктуру к будущим требованиям сети.
+With the growth of internet-connected devices and the increasing number of connections, IPv6 is becoming more relevant. In this article, I’ll show you how to enable IPv6 support in Docker and Docker Compose to ensure scalability and prepare your infrastructure for future network requirements.
 
-## Почему стоит использовать IPv6?
+## Why Use IPv6?
 
-IPv4 изначально был ограничен 32-битным адресным пространством, что приводит к нехватке доступных адресов. IPv6 решает эту проблему, предлагая 128-битное адресное пространство. Использование IPv6 в контейнерной инфраструктуре даёт следующие преимущества:
-- **Масштабируемость:** огромное количество адресов.
-- **Простота маршрутизации:** улучшенная структура для агрегации адресов.
-- **Будущая совместимость:** интернет постепенно переходит на IPv6, и ваше приложение должно быть готово.
+IPv4 was initially limited to a 32-bit address space, leading to a shortage of available addresses. IPv6 solves this problem by offering a 128-bit address space. Using IPv6 in container infrastructure provides the following benefits:
+- **Scalability:** A vast number of addresses.
+- **Simplified routing:** Improved structure for address aggregation.
+- **Future compatibility:** The internet is gradually shifting to IPv6, and your application should be ready.
 
 ---
 
-## Включение поддержки IPv6 в Docker
+## Enabling IPv6 Support in Docker
 
-Для начала нужно включить поддержку IPv6 в Docker. По умолчанию Docker работает только с IPv4, поэтому нужно внести изменения в конфигурацию.
+To start, you need to enable IPv6 support in Docker. By default, Docker only supports IPv4, so configuration changes are required.
 
-### Шаг 1: Настройка конфигурации Docker
+### Step 1: Configure Docker Settings
 
-1. Откройте или создайте файл конфигурации Docker `daemon.json`:
+1. Open or create Docker’s `daemon.json` configuration file:
 
 ```bash
 sudo nano /etc/docker/daemon.json
 ```
 
-2. Добавьте следующие строки:
+2. Add the following lines:
 
 ```json
 {
@@ -47,57 +47,57 @@ sudo nano /etc/docker/daemon.json
 }
 ```
 
-Параметр `"ipv6": true` активирует поддержку IPv6, а `"fixed-cidr-v6"` задаёт подсеть IPv6, которая будет использоваться сетью Docker.
+The `"ipv6": true` parameter enables IPv6 support, and `"fixed-cidr-v6"` specifies the IPv6 subnet that the Docker network will use.
 
-### Шаг 2: Перезапуск Docker
+### Step 2: Restart Docker
 
-После внесения изменений перезапустите Docker для применения настроек:
+After making the changes, restart Docker to apply the settings:
 
 ```bash
 sudo systemctl restart docker
 ```
 
-### Шаг 3: Проверка сети
+### Step 3: Verify the Network
 
-Убедитесь, что сеть с поддержкой IPv6 была создана успешно. Выполните:
+Ensure that the IPv6-supported network was created successfully by running:
 
 ```bash
 docker network ls
 ```
 
-Затем проверьте конфигурацию сети:
+Then check the network configuration:
 
 ```bash
 docker network inspect bridge
 ```
 
-Вы должны увидеть вашу подсеть IPv6 и шлюз.
+You should see your IPv6 subnet and gateway.
 
 ---
 
-## Создание контейнера с поддержкой IPv6
+## Creating a Container with IPv6 Support
 
-Теперь, когда Docker поддерживает IPv6, можно создавать контейнеры с этой поддержкой.
+Now that Docker supports IPv6, you can create containers with IPv6 capabilities.
 
-### Шаг 1: Запуск контейнера
+### Step 1: Start a Container
 
-Запустите контейнер с поддержкой IPv6:
+Launch a container with IPv6 support:
 
 ```bash
 docker run -di --name alpine6 alpine
 ```
 
-### Шаг 2: Проверка адресов
+### Step 2: Check Addresses
 
-Проверьте, что контейнер имеет как IPv4, так и IPv6 адреса:
+Verify that the container has both IPv4 and IPv6 addresses:
 
 ```bash
 docker exec alpine6 ip a
 ```
 
-### Шаг 3: Пинг шлюза
+### Step 3: Ping the Gateway
 
-Убедитесь, что контейнер может взаимодействовать с сетью через IPv6:
+Ensure that the container can interact with the network via IPv6:
 
 ```bash
 docker exec alpine6 ping6 2001:db8:abc1::1
@@ -105,19 +105,19 @@ docker exec alpine6 ping6 2001:db8:abc1::1
 
 ---
 
-## Создание пользовательской сети с IPv6
+## Creating a Custom Network with IPv6
 
-### Шаг 1: Создание сети
+### Step 1: Create the Network
 
-Для продакшн сред лучше создать свою сеть:
+For production environments, it’s better to create your own network:
 
 ```bash
 docker network create --ipv6 --subnet="2001:db8:1::/64" --gateway="2001:db8:1::1" my-net
 ```
 
-### Шаг 2: Присоединение контейнера
+### Step 2: Connect a Container
 
-Присоедините контейнер к пользовательской сети:
+Attach the container to the custom network:
 
 ```bash
 docker run -di --name alpine_custom --network my-net alpine
@@ -125,19 +125,19 @@ docker run -di --name alpine_custom --network my-net alpine
 
 ---
 
-## Настройка сети IPv6 с Docker Compose
+## Setting Up IPv6 Networking with Docker Compose
 
-Docker Compose — мощный инструмент для управления многоконтейнерными приложениями. Мы также можем настроить поддержку IPv6 через Compose.
+Docker Compose is a powerful tool for managing multi-container applications. You can also configure IPv6 support through Compose.
 
-### Пример 1: Использование существующей сети
+### Example 1: Using an Existing Network
 
-1. Сначала создайте сеть через командную строку:
+1. First, create the network via the command line:
 
 ```bash
 docker network create --ipv6 --subnet="2001:db8:1::/64" --gateway="2001:db8:1::1" mynetv6
 ```
 
-2. Теперь создайте `docker-compose.yml`, который будет использовать эту сеть:
+2. Now create a `docker-compose.yml` file that will use this network:
 
 ```yaml
 services:
@@ -151,15 +151,15 @@ networks:
     external: true
 ```
 
-3. Запустите Compose:
+3. Run Compose:
 
 ```bash
 docker compose up
 ```
 
-### Пример 2: Создание сети и контейнера через Docker Compose
+### Example 2: Creating the Network and Container via Docker Compose
 
-Другой подход — полностью управлять сетью через Compose:
+Another approach is to manage the network entirely through Compose:
 
 ```yaml
 services:
@@ -177,16 +177,16 @@ networks:
           gateway: 2001:db8:a::1
 ```
 
-Запустите:
+Run:
 
 ```bash
 docker compose up
 ```
 
-Этот файл создаст новую сеть с поддержкой IPv6 и запустит контейнер.
+This file will create a new IPv6-enabled network and launch the container.
 
 ---
 
-## Заключение
+## Conclusion
 
-IPv6 становится всё более важным компонентом современной сетевой инфраструктуры. Теперь вы знаете, как включить поддержку IPv6 в Docker и Docker Compose, что позволит вам создать масштабируемую и современную инфраструктуру для ваших приложений. Регулярно тестируйте настройки сети, чтобы удостовериться в правильной работе контейнеров с протоколом IPv6.
+IPv6 is becoming an increasingly important component of modern network infrastructure. Now you know how to enable IPv6 support in Docker and Docker Compose, allowing you to create scalable and modern infrastructure for your applications. Regularly test your network settings to ensure that your containers are functioning correctly with IPv6.

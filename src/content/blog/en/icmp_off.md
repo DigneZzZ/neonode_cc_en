@@ -1,52 +1,52 @@
 ---
-title: Отключение двухстороннего пинга
-description: Хотите замаскировать свой VPN или proxy? Узнайте, как отключить двусторонний пинг для повышения анонимности.
+title: Disabling Two-Way Ping
+description: Want to mask your VPN or proxy? Learn how to disable two-way ping to enhance anonymity.
 tags:
   - icmp
   - ping
   - linux
-  - двухсторонний пинг
+  - two-way ping
   - ICMP ping
 series: server
 draft: false
 pubDate: 09 10 2024
 ---
 
-# Отключение двухстороннего пинга
+# Disabling Two-Way Ping
 
-**Вы стремитесь максимально замаскировать свой VPN или proxy?** Тогда вам наверняка необходимо отключить двусторонний пинг, чтобы скрыть туннель и предотвратить его определение. 
+**Looking to maximize the anonymity of your VPN or proxy?** Disabling two-way ping might be what you need to hide the tunnel and prevent detection.
 
-В этой краткой, но полезной заметке, я расскажу, как отключить ответ на ICMP пинг на Linux и Windows.
-
----
-
-## Что такое двухсторонний пинг?
-
-Двусторонний пинг позволяет определить, что сервер находится в сети, отправляя ICMP-запросы и получая ответы. Отключив ответы на ICMP, вы можете скрыть туннель и сделать ваш VPN или proxy менее заметным.
+In this short but helpful guide, I’ll explain how to disable ICMP ping responses on both Linux and Windows.
 
 ---
 
-## Шаги для отключения двухстороннего пинга на Linux
+## What is Two-Way Ping?
 
-### 1. Подключение к серверу
+Two-way ping allows others to verify that a server is online by sending ICMP requests and receiving responses. Disabling ICMP responses helps hide the tunnel, making your VPN or proxy less detectable.
 
-Подключитесь к вашему серверу через `ssh` и войдите под пользователем `root`:
+---
+
+## Steps to Disable Two-Way Ping on Linux
+
+### 1. Connect to Your Server
+
+Connect to your server via `ssh` and log in as `root`:
 
 ```bash
 ssh root@your-server-ip
 ```
 
-### 2. Редактирование настроек фаервола UFW
+### 2. Edit UFW Firewall Settings
 
-Для начала нужно отредактировать правила фаервола **ufw**. Откройте файл конфигурации `before.rules` с помощью редактора **nano**:
+First, edit the **ufw** firewall rules. Open the `before.rules` configuration file with the **nano** editor:
 
 ```bash
 nano /etc/ufw/before.rules
 ```
 
-### 3. Добавление правил блокировки ICMP
+### 3. Add ICMP Blocking Rules
 
-Добавьте следующие строки в файл, чтобы блокировать различные типы ICMP-запросов:
+Add the following lines to block various types of ICMP requests:
 
 ```bash
 # Disable ICMP ping responses
@@ -57,81 +57,81 @@ nano /etc/ufw/before.rules
 -A ufw-before-input -p icmp --icmp-type echo-request -j DROP
 ```
 
-Эти правила отключат различные типы ICMP-запросов, включая `echo-request`, который используется для стандартных ping-запросов.
+These rules will disable various ICMP request types, including `echo-request`, commonly used for standard ping requests.
 
-### 4. Перезапуск UFW
+### 4. Restart UFW
 
-После внесения изменений перезапустите фаервол UFW, чтобы правила вступили в силу:
+After making changes, restart the UFW firewall to apply the new rules:
 
 ```bash
 ufw disable && ufw enable
 ```
 
-### 5. Проверка
+### 5. Verify
 
-Теперь ваш сервер не должен отправлять ICMP-ответы, что делает его менее заметным для тех, кто пытается "пропинговать" ваш туннель.
+Now, your server should not respond to ICMP requests, making it less detectable to anyone attempting to “ping” your tunnel.
 
-Можно зайти на сайт [2ip.io](https://2ip.io/privacy/) и проверить уровень анонимности.
-
----
-
-## Важные замечания
-
-- **Ограничения**: Отключение ICMP-пинга может затруднить диагностику проблем с сетью, так как ping-запросы используются для проверки доступности сервера.
-- **Альтернатива**: Если полное отключение ICMP не подходит, можно рассмотреть частичное ограничение, блокируя только определённые типы ICMP-запросов.
+You can check your anonymity level on [2ip.io](https://2ip.io/privacy/).
 
 ---
 
-## Заключение
+## Important Notes
 
-Отключение двустороннего пинга — это простой и эффективный способ повысить анонимность вашего сервера, туннеля VPN или proxy. Однако будьте внимательны при изменении настроек сети, так как это может повлиять на доступность сервера для мониторинга и диагностики. 
-
-Если вы стремитесь к максимальной маскировке своего трафика, этот метод поможет вам добиться большей приватности.
-
-Вот более подробное обновление к статье, с объяснением и инструкциями по разрешению ICMP echo-request только для конкретного IP-адреса, и дополнительные рекомендации для работы с Uptime Kuma:
+- **Limitations**: Disabling ICMP ping may make network diagnostics more challenging, as ping requests are often used to verify server availability.
+- **Alternative**: If completely disabling ICMP isn’t suitable, consider partially limiting ICMP by blocking only certain types of requests.
 
 ---
 
-## Обновление: Разрешение ICMP echo-request для конкретного IP
+## Conclusion
 
-Недавно ко мне обратились с ситуацией, когда на сервере, где пинг был отключен для повышения анонимности, также работал мониторинг через Uptime Kuma. Конечно, для мониторинга нужен доступ через ICMP, но разрешить пинг для всех было не лучшим вариантом. Вот как я решил проблему, разрешив ICMP echo-request только для конкретного IP.
+Disabling two-way ping is a straightforward and effective way to enhance the anonymity of your server, VPN tunnel, or proxy. However, be cautious when changing network settings, as this may impact server availability for monitoring and diagnostics.
 
-### 1. Разрешение ICMP echo-request от IP Uptime Kuma
+If you aim for maximum traffic masking, this method will help you achieve greater privacy.
 
-Сначала я открыл доступ для ICMP-запросов от определённого IP-адреса, с которого приходит мониторинг. Например, если IP Uptime Kuma – `1.2.3.4`:
+Below is an article update explaining how to allow ICMP echo-request for a specific IP and additional recommendations for working with Uptime Kuma.
+
+---
+
+## Update: Allowing ICMP Echo-Request for a Specific IP
+
+Recently, I encountered a situation where a server with disabled ping for anonymity was also running monitoring via Uptime Kuma. Of course, monitoring needs ICMP access, but enabling ping for everyone wasn’t ideal. Here’s how I solved the issue by allowing ICMP echo-request only for a specific IP.
+
+### 1. Allow ICMP Echo-Request from Uptime Kuma’s IP
+
+First, I allowed ICMP requests from a specific IP address for monitoring. For example, if Uptime Kuma’s IP is `1.2.3.4`:
 
 ```bash
 sudo iptables -A INPUT -p icmp --icmp-type echo-request -s 1.2.3.4 -j ACCEPT
 ```
 
-### 2. Блокировка всех остальных ICMP-запросов
+### 2. Block All Other ICMP Requests
 
-Для защиты сервера я также заблокировал все остальные ICMP-запросы от других IP:
+To protect the server, I blocked all other ICMP requests from other IPs:
 
 ```bash
 sudo iptables -A INPUT -p icmp --icmp-type echo-request -j DROP
 ```
 
-### 3. Дополнительные ICMP для мониторинга
+### 3. Additional ICMP Types for Monitoring
 
-Некоторые системы мониторинга, такие как Uptime Kuma, могут использовать другие типы ICMP-запросов для диагностики, поэтому я разрешил еще пару важных типов запросов:
+Some monitoring systems, like Uptime Kuma, may use other ICMP types for diagnostics, so I allowed a couple of key request types:
 
 ```bash
-# Разрешить Destination Unreachable от конкретного IP
+# Allow Destination Unreachable from specific IP
 sudo iptables -A INPUT -p icmp --icmp-type destination-unreachable -s 1.2.3.4 -j ACCEPT
 
-# Разрешить Time Exceeded от конкретного IP
+# Allow Time Exceeded from specific IP
 sudo iptables -A INPUT -p icmp --icmp-type time-exceeded -s 1.2.3.4 -j ACCEPT
 ```
 
-Это помогло сохранить функциональность мониторинга, не открывая ICMP для всего интернета.
+This preserved monitoring functionality without opening ICMP for the entire internet.
 
-### 4. Сохранение настроек iptables
+### 4. Save iptables Settings
 
-После настройки я сохранил правила iptables, чтобы они применялись после перезагрузки:
+After configuring, I saved the iptables rules to apply after reboot:
 
 ```bash
 sudo iptables-save | sudo tee /etc/iptables/rules.v4
 ```
 
-Теперь мониторинг от Uptime Kuma работает, а сервер остается защищённым от нежелательных ICMP-запросов.
+Now, Uptime Kuma monitoring works, and the server remains protected from unwanted ICMP requests.

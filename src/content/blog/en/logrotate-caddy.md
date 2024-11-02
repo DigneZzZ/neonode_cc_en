@@ -1,6 +1,6 @@
 ---
-title: Ротация логов в Caddy
-description: Ротация логов в Caddy позволяет обеспечить необходимый уровень контроля за сервером (особенно что касается работы f2b/crowdsec), а также избежать переполнения файлового хранилища при большом "ритме" логов.
+title: Log Rotation in Caddy
+description: Log rotation in Caddy helps maintain necessary server control (especially for f2b/crowdsec monitoring) and prevents storage overflow due to high log output.
 tags:
   - caddy
   - logrotate
@@ -10,73 +10,73 @@ draft: false
 pubDate: 09 11 2024
 ---
 
-# Ротация логов в Caddy
+# Log Rotation in Caddy
 
-Ротация логов — это процесс автоматического архивирования и удаления старых логов для предотвращения переполнения дискового пространства. В случае Caddy можно настроить ротацию логов с помощью сторонних инструментов, таких как **logrotate**, который широко используется для ротации логов в Linux.
+Log rotation is the process of automatically archiving and deleting old logs to prevent disk space from filling up. For Caddy, log rotation can be set up using external tools like **logrotate**, widely used for log rotation on Linux.
 
-## Настройка ротации логов с помощью logrotate
+## Configuring Log Rotation with logrotate
 
-### 1. **Установка logrotate** (если он еще не установлен)
+### 1. **Install logrotate** (if not already installed)
 
 ```bash
 sudo apt install logrotate
 ```
 
-### 2. **Создание конфигурации для Caddy**
+### 2. **Create a Configuration for Caddy**
 
-Откройте или создайте файл конфигурации для Caddy в `/etc/logrotate.d/caddy`:
+Open or create a configuration file for Caddy in `/etc/logrotate.d/caddy`:
 
 ```bash
 sudo nano /etc/logrotate.d/caddy
 ```
 
-### 3. **Пример конфигурации для ротации логов Caddy**
+### 3. **Sample Configuration for Caddy Log Rotation**
 
-   Вставьте в файл следующую конфигурацию:
+   Insert the following configuration into the file:
 
 ```bash
 /var/log/caddy/*.log {
-daily
-missingok
-rotate 14
-compress
-delaycompress
-notifempty
-create 0640 root root  
-postrotate
-    systemctl reload caddy
-endscript
+    daily
+    missingok
+    rotate 14
+    compress
+    delaycompress
+    notifempty
+    create 0640 root root  
+    postrotate
+        systemctl reload caddy
+    endscript
 }
 ```
 
-Если у вас используется другой пользователь, не `root`, то замените на него.
+If you are using a user other than `root`, replace it accordingly.
 
-## Пояснение настроек
+## Explanation of the Settings
 
-- `daily`: Логи будут ротироваться каждый день. Можно заменить на `weekly` для еженедельной ротации.
-- `rotate 14`: Хранить до 14 архивов логов.
-- `compress`: Сжимать архивы для экономии места.
-- `delaycompress`: Откладывать сжатие логов до следующей ротации.
-- `notifempty`: Не ротация, если файл логов пустой.
-- `create 0640 root root`: Создавать новый файл с правами 0640 и владельцем `root`.
-- `postrotate`: После ротации перезапустить службу Caddy, чтобы она начала писать в новый файл.
+- `daily`: Logs will be rotated daily. You can change this to `weekly` for weekly rotation.
+- `rotate 14`: Retain up to 14 log archives.
+- `compress`: Compress archives to save space.
+- `delaycompress`: Delay compression until the next rotation.
+- `notifempty`: Skip rotation if the log file is empty.
+- `create 0640 root root`: Create a new file with 0640 permissions and `root` as the owner.
+- `postrotate`: After rotation, restart the Caddy service to start writing to a new file.
 
-## **Проверка работы logrotate**
+## **Checking logrotate Configuration**
 
-Вы можете проверить правильность конфигурации logrotate с помощью команды:
+You can check the logrotate configuration with the following command:
 
 ```bash
 sudo logrotate -d /etc/logrotate.d/caddy
 ```
 
-   Эта команда выполняет тест и показывает, как будет проходить ротация, но не вносит изменений.
+   This command performs a test and shows how the rotation will proceed, without making changes.
 
-## **Запуск logrotate вручную для проверки**
+## **Manually Running logrotate for Testing**
 
-   Чтобы вручную запустить ротацию и убедиться, что все работает правильно, выполните:
+   To manually trigger rotation and verify functionality, run:
 
 ```bash
 sudo logrotate -f /etc/logrotate.d/caddy
 ```
 
-После этих шагов logrotate будет автоматически ротировать логи Caddy согласно заданным настройкам.
+After these steps, logrotate will automatically rotate Caddy logs according to the specified settings.

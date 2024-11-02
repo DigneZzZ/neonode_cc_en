@@ -1,19 +1,19 @@
 ---
-title: Настройка Multi-WAN в pfSense
-description: Настройка автоматического переключения между двумя провайдерами с помощью Multi-WAN в pfSense.
+title: Configuring Multi-WAN in pfSense
+description: Setting up automatic switching between two providers using Multi-WAN in pfSense.
 tags:
   - pfSense
   - Multi-WAN
-  - резервирование
-  - интернет
+  - redundancy
+  - internet
 series: network
 draft: false
 pubDate: 10 8 2024
 ---
 
-**ДАНО:** Есть два провайдера, нужно сделать так, чтобы если отваливается один, автоматически переключаться на другого.
+**SITUATION:** There are two providers, and we need to configure automatic switching to the other provider if one fails.
 
-**РЕШЕНИЕ:** Multi-WAN в pfSense позволяет использовать несколько подключений к Интернету для достижения отказоустойчивости и большей пропускной способности.
+**SOLUTION:** Multi-WAN in pfSense allows you to use multiple internet connections to achieve failover and greater bandwidth.
 
 ---
 

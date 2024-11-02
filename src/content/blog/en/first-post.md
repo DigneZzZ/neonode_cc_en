@@ -1,6 +1,6 @@
 ---
-title: Планы проекта NeoNode
-description: Данный пост определяет цели проекта NeoNode и рассказываем про все возможности.
+title: NeoNode Project Plans
+description: This post outlines the goals of the NeoNode project and introduces all its features.
 tags:
   - intro
   - openode
@@ -10,38 +10,35 @@ series: neonode
 draft: false
 pubDate: 09 10 2024
 ---
-# Привет всем!
+# Hello Everyone!
+
+It’s time to share the development plans for the project.
+
+## About the Openode.xyz Project
+- It will definitely continue.
+- Club articles will remain updated as before.
+- Blog information will also be duplicated on the forum.
+
+## NeoNode.cc Project
+- This is my second project.
+- Plans include adding multi-language support to articles.
+- There will be no paid sections, but there’s one caveat…
+    - Some articles will only have previews.
+    - The main content will be available in a Telegram bot, with separate subscriptions for each article section.
+- More free articles will be available.
+- The project aims to expand the audience and make it accessible to an international audience.
+
+**The project has its own Telegram channel: https://t.me/neonode_cc**
+
+**The project also has its own Telegram community: https://t.me/+cFdHT8DiMUA2MWVi**
+
+- I will be sharing my entire set of useful tools and scripts on this project.
+
+## Telegram Bot Project for Article Sales
+I've received several requests for the option to purchase access to individual articles rather than all content. To meet this demand, I’ve developed a bot that is 30% ready and capable of selling access:
+- The bot will be multilingual (Russian and English).
+- It will support cryptocurrency payments.
+- Payment will also be available via Russian bank cards.
 
 
-Пожалуй, пора поделиться планами по развитию проекта.
-
-## Что касается проекта Openode.xyz 
-- он точно продолжит существовать
-- статьи в клубах как и раньше будут актуализироваться
-- информация с блога будет также дублироваться на форум
-## Проект NeoNode.cc
-- Это мой второй проект.
-- Планируется добавить поддержку других языков к статьям.
-- Платных разделов не будет, но есть одно НО..
-    - Некоторые статьи будут иметь только анонсы
-    - Основной объем информации будет размещен в ТГ боте с сепарированной подпиской на каждый раздел статей.
-- Будет больше бесплатных статей
-- Проект призван расширить аудиторию и добавить возможность приобщить иностранную аудиторию
-
-**У проекта свой телеграм канал: https://t.me/neonode_cc**
-
-**У проекта свое телеграм сообщество: https://t.me/+cFdHT8DiMUA2MWVi**
-
-- Весь основной набор своих полезных нароботок и скриптов, я буду размещать именно на этом проекте
-## Проект Телеграм-бота по продаже статей
-Уже не один раз, я получал запросы, что приобретать доступ сразу ко всем статьям - люди не готовы, и хотели бы сепарировано покупать только к интересующих их материалам.
-Я решил удовлетворить это требование и уже подготовил на 30% своего бота способного продавать доступ
-- бот будет мультиязычным (русский и английский)
-- будет организован прием криптовалюты
-- оплата также будет доступна картами РФ
-## Проект Marzban SaaS.
-Это проект еще в сдадии MVP, и сейчас идет активная подготовка к запуску в продуктив.
-Осталось донастроить несколько основных моментов и тогда будет все опубликовано. Новость об этом я размещу в этом блоге дополнительно.
-Сейчас уже подготовлен особый раздел для этих задач: https://neonode.cc/projects/msaas
-
-На этом пока все, следите за новостями!
+That’s all for now; stay tuned for more updates!
