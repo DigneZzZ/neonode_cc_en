@@ -5,7 +5,7 @@ const year = new Date().getFullYear();
 const lang = getLangFromUrl(Astro.url);
 const t = useNavTranslations(lang);
 import type { NavEntry } from "@/i18n/nav";
-
+const url = new URL(Astro.request.url);
 function buildNavLink(nav: string, entry: NavEntry): string {
 	if (entry.route) {
 		return `/${lang}${entry.route}`;
