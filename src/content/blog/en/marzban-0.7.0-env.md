@@ -1,5 +1,5 @@
 ---
-title: New .env Variables for Marzban Optimization
+title: New .env Variables for Marzban 0.7.0 Optimization
 description: This guide describes new environment variables added to Marzban to enhance performance, especially for high user loads.
 tags:
   - Marzban
@@ -18,13 +18,13 @@ These variables apply to database-related tasks and are especially helpful for M
 
 1. **SQLALCHEMY_POOL_SIZE**: Specifies the number of idle connections in the database connection pool. When the application starts, it will create up to 10 idle connections, ready for use.
 
-   ```plaintext
+   ```bash
    SQLALCHEMY_POOL_SIZE = 10
    ```
 
 2. **SQLALCHEMY_MAX_OVERFLOW**: This variable allows up to 30 additional connections to be created if needed. Once they’re no longer required, these connections are closed and removed from the pool.
 
-   ```plaintext
+   ```bash
    SQLALCHEMY_MAX_OVERFLOW = 30
    ```
 
@@ -34,31 +34,31 @@ The following variables define the execution intervals for various periodic task
 
 1. **JOB_CORE_HEALTH_CHECK_INTERVAL**: Specifies the interval, in seconds, for checking core health. If a core is unresponsive, it will be reset. Default is every 10 seconds.
 
-   ```plaintext
+   ```bash
    JOB_CORE_HEALTH_CHECK_INTERVAL = 10
    ```
 
 2. **JOB_RECORD_NODE_USAGES_INTERVAL**: Manages the calculation of node usage, running every 30 seconds by default.
 
-   ```plaintext
+   ```bash
    JOB_RECORD_NODE_USAGES_INTERVAL = 30
    ```
 
 3. **JOB_RECORD_USER_USAGES_INTERVAL**: Sets the interval, in seconds, for tracking user resource usage. Default is every 10 seconds.
 
-   ```plaintext
+   ```bash
    JOB_RECORD_USER_USAGES_INTERVAL = 10
    ```
 
 4. **JOB_REVIEW_USERS_INTERVAL**: Checks users every 10 seconds to see if their time or data limits have been reached and updates their status to “limited” or “expired” if necessary.
 
-   ```plaintext
+   ```bash
    JOB_REVIEW_USERS_INTERVAL = 10
    ```
 
 5. **JOB_SEND_NOTIFICATIONS_INTERVAL**: Defines the interval for checking the notification queue and sending out notifications, particularly used for webhook integrations. Default is every 30 seconds.
 
-   ```plaintext
+   ```bash
    JOB_SEND_NOTIFICATIONS_INTERVAL = 30
    ```
 
