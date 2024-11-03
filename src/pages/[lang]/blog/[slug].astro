@@ -1,6 +1,7 @@
 ---
 import type { InferGetStaticPropsType, GetStaticPaths } from "astro";
 import BlogPost from "@/layouts/BlogPost";
+import Signature from '@/components/Signature';
 import {
 	filterByLanguage,
 	getAllPosts,
@@ -36,4 +37,5 @@ const { Content } = await post.render();
 
 <BlogPost post={post as CollectionEntry<"blog">}>
 	<Content />
+	<Signature />
 </BlogPost>
