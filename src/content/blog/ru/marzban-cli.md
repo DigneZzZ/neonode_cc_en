@@ -4,9 +4,13 @@ description: This guide provides Marzban CLI usage
 tags:
   - CLI
   - Marzban
+  - Command Line Interface
+  - Guide
+  - Admin Commands
+  - Subscription Management
 series: MarzbanGuide
 draft: false
-pubDate: 11 02 2024
+pubDate: 11 04 2024
 ---
 
 # Командная строка (CLI)
