@@ -1,3 +1,15 @@
+---
+import { getLangFromUrl, useUITranslations } from "@/utils";
+import {
+    getLocalizedUrl,
+    getSupportedLanguages,
+    type SupportedLanguage,
+} from "src/utils/i18n";
+const translate = useUITranslations(lang);
+const lang = getLangFromUrl(Astro.url);
+
+---
+
 <section class="cody-bg space-y-1 sm:space-y-2">
     <!-- Разделитель -->
     <hr class="my-2" />
@@ -5,20 +17,24 @@
     <!-- Контент подписи -->
     <ul class="space-y-1">
       <li class="signature-item">
-        <small>Сообщество OpeNode</small>
+        <small>{translate("link.openode").text}</small>
         <a href="https://openode.xyz" target="_blank" class="cody-link">OpeNode.xyz</a>
       </li>
       <li class="signature-item">
-        <small>Сервера Aeza (+15% к пополнению)</small>
+        <small>{translate("link.aeza").text}</small>
         <a href="https://aeza.net/?ref=377137" target="_blank" class="cody-link">Aeza.net</a>
       </li>
       <li class="signature-item">
-        <small>Лучший EU хостер (<b>1 MONTH FREE</b>)</small>
+        <small>{translate("link.kamatera").text}</small>
         <a href="https://go.cloudwm.com/visit/?bta=36601&nci=5737" target="_blank" class="cody-link">Kamatera.com</a>
       </li>
       <li class="signature-item">
-        <small>Хостер 4VPS (10% discount)</small>
+        <small>{translate("link.4vps").text}</small>
         <a href="https://4vps.su/r/p52GUJhPv8b5" target="_blank" class="cody-link">4VPS.su</a>
+      </li>
+      <li class="signature-item">
+        <small>TG Channel</small>
+        <a href="https://t.me/+cFdHT8DiMUA2MWVi" target="_blank" class="cody-link">TG-Channel <b>Neonode.cc</b></a>
       </li>
       <!-- Добавьте другие ссылки по необходимости -->
     </ul>

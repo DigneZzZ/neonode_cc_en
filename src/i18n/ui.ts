@@ -15,7 +15,7 @@ export default {
             text: "IT Blog"
         },
         "profile.description": {
-            text: "your bio description"
+            text: "Digital content creater"
         },
         "blog.lastUpdated": {
             text: "Last updated:"
@@ -31,6 +31,18 @@ export default {
         },
         "project.website": {
             text: "WEBSITE"
+        },
+        "link.aeza": {
+            text: "Aeza VPS (+15% on payment)"
+        },
+        "link.openode": {
+            text: "Our community Openode.XYZ"
+        },
+        "link.kamatera": {
+            text: "Best EU hosting (+1 month free)"
+        },
+        "link.4vps": {
+            text: "VPS hosting - 4vps.su (-10% discount!)"
         }
     },
     "ru": {
@@ -57,7 +69,21 @@ export default {
         },
         "project.website": {
             text: "ВЕБСАЙТ"
+        },
+        "link.aeza": {
+            text: "Aeza VPS (+15% к пополнению)"
+        },
+        "link.openode": {
+            text: "Наше сообщество Openode.XYZ"
+        },
+        "link.kamatera": {
+            text: "Лучший Евро-хостер VPS (+1 месяц бесплатно на 100$)"
+        },
+        "link.4vps": {
+            text: "VPS hosting - 4vps.su (-10% скидка!)"
         }
+
+        
     }
 } as const satisfies TranslationUIEntries;
 
