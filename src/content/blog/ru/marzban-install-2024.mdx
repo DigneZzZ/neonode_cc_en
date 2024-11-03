@@ -22,92 +22,126 @@ pubDate: 11 03 2024
 <details>
   <summary>Подробные изменения</summary>
 
- 🚀 Улучшения:
 
-  - telegramBot: Добавлено время ожидания для onhold (3c2bbed)
-  - Добавлена поддержка списка адресов в hosts (e80e119)
-  - subscription: Добавлен шаблон настроек для Clash (94a3f28)
-  - subscription: Синхронизация splithttp с версией 1.8.23 (d0c16a1)
-  - Переменные SQLALCHEMY_POOL_SIZE и SQLALCHEMY_MAX_OVERFLOW (cea7f2f)
-  - Переменные для настройки интервала заданий: JOB_CORE_HEALTH_CHECK_INTERVAL, JOB_RECORD_NODE_USAGES_INTERVAL, JOB_RECORD_USER_USAGES_INTERVAL, JOB_REVIEW_USERS_INTERVAL, JOB_SEND_NOTIFICATIONS_INTERVAL (2d50bf9)
-  - Добавлен выбор узла для логов в CoreSettingsModal.tsx (b4dbba7)
-  - Добавлена функция дублирования хоста в HostsDialog (48b91c2)
-  - Добавлены иконки вверх и вниз для изменения порядка хостов (1a3c0a0)
-  - Добавлен белый список IP/хостов для отключения уведомлений о входе (b6d2658)
-  - api: Добавлена возможность расчета потребления для админов (c2c98b7)
-  - users: Добавлено соотношение использования на мастер-сервере (041b810)
-  - Добавлен шум в hosts (7d738cd)
-  - Добавлена поддержка новых переменных для splithttp (2a7636a)
-  - Добавлена поддержка протокола Transport RAW (8942abe)
+<details>
+  <summary>Подробные изменения</summary>
 
-  🩹 Исправления:
+🚀 Улучшения
 
-  - Принудительное требование SSL для публичного доступа XTLS/Xray-core#3884 (e60e54f)
-  - subscription: Отправка корректной сортировки для разных версий v2rayng (5c5503d)
-  - Исправлена ошибка редактирования протокола пользователя в Telegram-боте (ef82864)
-  - Исправлена ошибка сброса использования у пользователя в Telegram-боте (92fdeef)
-  - Добавлена документация для работы с БД (48a5ad2)
-  - Исправлена ошибка ссылок в Telegram-боте, когда on_hold равно null (d69fac6)
-  - subscription: Удалён user-agent для sing-box и clash (ff03e3a)
-  - Единый строковый порт для v2ray-json (8f0c909)
-  - Небольшие исправления статуса on_hold в telegram-bot (cf98e95)
-  - Перехват ошибки, если не найден шаблон настроек (582b2bb)
-  - config: Повреждение данных hosts (6483e42)
-  - Обновление документации статуса пользователя (3fb46c1)
-  - Исправление некоторых багов на фронтенде (2f2cbd1)
-  - subscription: Разделение настроек http и none header (e4bd603)
-  - subscription: Разделение настроек http и h2 (2260d28)
-  - subscription: Мульти-режим для grpc (a2ba2c0)
-  - subscription: Singbox ws игнорирует wsSettings (c02ef96)
-  - subscription: Использование неправильной переменной в настройках (70dfb6d)
-  - subscription: Предотвращение использования noneSettings как настройки безопасности (87dca23)
-  - Неверная конфигурация как внешняя (c63f95a)
-  - subscription: Предотвращение создания network_setting для reality (fb77570)
-  - subscription: Временное отключение shuffle, чтобы избежать отправки неверных данных (e7d6756)
-  - splithttp: Значение по умолчанию для splithttp (aa664a2)
-  - NOTIFY_DAYS_LEFT (530649d)
-  - Ошибка Pydantic в user.links (25c07ac)
-  - Удаление RANDOMIZE_SUBSCRIPTION_CONFIGS (cb7aa7a)
-  - subscription: Использование deepcopy для предотвращения конфликтов (f7d20b6)
-  - Совместимость Marzban-cli с python3.8 (f3e6197)
-  - Предотвращение ошибки при входе, если request.client отсутствует (d77eb30)
-  - subscription: Исправление потока Vless и заголовка tcp (7a0a9ca)
-  - Отображение подписки в Hiddify в user_subscription (5169810)
-  - Аннулирование подписки не обновляет конфигурацию xray в Telegram-боте (791a7f2)
-  - Изменение outbound тега на proxy в пользовательской конфигурации v2ray (eb84a09)
-  - Предотвращение дублирования имен в clash (e37a3da)
-  - subscription: Исправление потока Vless и заголовка tcp (efc55ac)
-  - subscription: Заголовок tcp без tls и пустой тип заголовка (241d823)
-  - Исправление некоторых багов api (a10745d)
-  - Предотвращение передачи неожиданных переменных для генерации подписки (f1395ee)
-  - Избежание создания словаря при каждом запросе и удаление внешней проверки (47d8336)
-  - Неправильное написание ALLOWED_ORIGINS (f0a7e21)
-  - Проблема с Node_user_usages (68dab4c)
-  - Ошибка Node_usage (1332c7a)
-  - Ошибочный рефакторинг (использование неверного админа по полю) (d7281c2)
-  - Рефакторинг функции validate_dates для избежания дублирования кода (aea3273)
-  - Telegram-бот не отправляет результат лимита пользователя (0ebbff3)
-  - db: Миграция настроек шума (#1352)
-  - hosts: Проверка наличия шума (dcc9fd9)
-  - subscription: Удаление поля network для sing-box (f9c15a1)
-  - Subscription: Правильное создание списка proxy remarks для конфигурации clash (#1357)
-  - config: Http и allyes (bc81290)
-  - Clash-meta неожиданный аргумент 'remark' (9d49a11)
-  - subscription: Транспорт H3 (a930ed4)
-  - Добавлен DASHBOARD_PATH как базовый URL vites в dev-среде (327e79a)
-  - Циклический импорт (75bcdd9)
+-   **telegramBot:** Добавлено время ожидания для onhold ([3c2bbed](https://github.com/Gozargah/Marzban/commit/3c2bbed23563f58aadae846e3ae2951ac24a0973))
+-   Добавлена поддержка списка адресов в hosts ([e80e119](https://github.com/Gozargah/Marzban/commit/e80e119ee8ce83e093927a1ac4b0cb241ef00112))
+-   **subscription:** Добавлен шаблон настроек для Clash ([94a3f28](https://github.com/Gozargah/Marzban/commit/94a3f28198d317ae9f5f9cb8c7c4ade1da79f5ee))
+-   **subscription:** Синхронизирован splithttp с версией 1.8.23 ([d0c16a1](https://github.com/Gozargah/Marzban/commit/d0c16a1b2978bcd645b6605e84895e8e9c1e7b92))
+-   Переменные SQLALCHEMY\_POOL\_SIZE и SQLIALCHEMY\_MAX\_OVERFLOW ([cea7f2f](https://github.com/Gozargah/Marzban/commit/cea7f2f70692f84b39a5c0eadf0edf766de6b020))
+-   Переменные для настройки интервала задач: JOB\_CORE\_HEALTH\_CHECK\_INTERVAL, JOB\_RECORD\_NODE\_USAGES\_INTERVAL, JOB\_RECORD\_USER\_USAGES\_INTERVAL, JOB\_REVIEW\_USERS\_INTERVAL, JOB\_SEND\_NOTIFICATIONS\_INTERVAL ([2d50bf9](https://github.com/Gozargah/Marzban/commit/2d50bf94ff9baa27977cbf1e5e311d005eb99ee8))
+-   Добавлен выбор узла для логов в CoreSettingsModal.tsx ([b4dbba7](https://github.com/Gozargah/Marzban/commit/b4dbba7f75087ebb38cf46bf69c2377a219f1134))
+-   Добавлена функция дублирования хоста в HostsDialog ([48b91c2](https://github.com/Gozargah/Marzban/commit/48b91c2aafb0197ed70c70623379c61c53101988))
+-   Добавлены иконки вверх и вниз для изменения порядка хостов ([1a3c0a0](https://github.com/Gozargah/Marzban/commit/1a3c0a040f4d719901d1ee216bb25a6450fb8db7))
+-   Добавлен белый список IP/хостов для отключения уведомлений о входе ([b6d2658](https://github.com/Gozargah/Marzban/commit/b6d2658e56e075e841a6ca190c440bf8045327d5))
+-   **api:** Добавлена возможность расчета потребления для администраторов ([c2c98b7](https://github.com/Gozargah/Marzban/commit/c2c98b76b919d88353ab922753caaae72af0c214))
+-   Добавлен шум в hosts ([7d738cd](https://github.com/Gozargah/Marzban/commit/7d738cdd854eca1dda914a005f838c28604ef21e))
+-   Добавлена поддержка новых переменных для splithttp ([2a7636a](https://github.com/Gozargah/Marzban/commit/2a7636a85bd13efd1fd17ca75a9cda7d5bdcd85c))
+-   Добавлена поддержка протокола Transport RAW ([8942abe](https://github.com/Gozargah/Marzban/commit/8942abee7a0a14460e798614f1524c4fd749261c))
 
-  💅 Рефакторинг:
+🩹 Исправления
 
-  - **api**: ⚠️ Добавлен роутер к API (cf6d8ac)
-  - **admin-endpoints**: ⚠️ Рефакторинг админских точек доступа и добавлены два новых admin depends (e87e15b)
-  - **node-endpoints**: ⚠️ Рефакторинг точек доступа узлов и добавлены два новых node depends (cf4472b)
-  - **system-endpoints**: ⚠️ Рефакторинг системных точек доступа (d631db5)
-  - **core-endpoints**: ⚠️ Рефакторинг основных точек доступа (ee341cb)
-  - **usertemplates-endpoints**: ⚠️ Рефакторинг точек доступа шаблонов пользователей (6918f7f)
-  - **home-endpoints**: ⚠️ Рефакторинг точек доступа главной страницы (36532a9)
-  - **sub-endpoints**: ⚠️ Рефакторинг точек доступа подписок (215bf32)
-  - **user**: ⚠️ Рефакторинг API пользователя и исправление функции validate_dates (b551447)
+-   Принудительное требование SSL для публичного доступа [XTLS/Xray-core#3884](https://github.com/XTLS/Xray-core/pull/3884) ([e60e54f](https://github.com/Gozargah/Marzban/commit/e60e54f55c6ea7f84f9f9c6024368d78935b790d))
+-   **subscription:** Отправка корректной сортировки для разных версий v2rayng ([5c5503d](https://github.com/Gozargah/Marzban/commit/5c5503d8b9dac538d8840ce4688ed89299530115))
+-   Исправлена ошибка редактирования протокола пользователя в Telegram-боте ([ef82864](https://github.com/Gozargah/Marzban/commit/ef828648f1f419c13362928358393669e02d3cb6))
+-   Исправлена ошибка сброса использования у пользователя в Telegram-боте ([92fdeef](https://github.com/Gozargah/Marzban/commit/92fdeef7ff7be977b98159a9dac556bd4886c37f))
+-   Добавлена документация для работы с БД ([48a5ad2](https://github.com/Gozargah/Marzban/commit/48a5ad22717e6923d88b3b449c2813e6ae436eb5))
+-   Исправлена ошибка ссылок в Telegram-боте, когда on\_hold равно null ([d69fac6](https://github.com/Gozargah/Marzban/commit/d69fac63d793b325c0bf816ec07ab95412a71537))
+-   **subscription:** Удалён user-agent для sing-box и clash ([ff03e3a](https://github.com/Gozargah/Marzban/commit/ff03e3afce52f4953aaa7d971e0524903d0f1bfb))
+-   Единый строковый порт для v2ray-json ([8f0c909](https://github.com/Gozargah/Marzban/commit/8f0c9095ea98ccd0d469a04974a9bc99d77d5d18))
+-   Небольшие исправления статуса on\_hold в telegram-bot ([cf98e95](https://github.com/Gozargah/Marzban/commit/cf98e95ccf69eff84fd5042747ff67021800fa56))
+-   Перехват ошибки, если не найден шаблон настроек ([582b2bb](https://github.com/Gozargah/Marzban/commit/582b2bba61b6461bb9d15e7fabede803e3539676))
+-   **config:** Повреждение данных hosts ([6483e42](https://github.com/Gozargah/Marzban/commit/6483e42df85ddc461e0eb9c8c4546a949f72e571))
+-   Обновление документации статуса пользователя ([3fb46c1](https://github.com/Gozargah/Marzban/commit/3fb46c1bbd4b12e6966829122389aedbd7bd7471))
+-   Исправление некоторых багов на фронтенде ([2f2cbd1](https://github.com/Gozargah/Marzban/commit/2f2cbd1b3eb73d11f34de781c570701300e7afb8))
+-   **subscription:** Разделение настроек http и none header ([e4bd603](https://github.com/Gozargah/Marzban/commit/e4bd603e135f4bb231f67ec2ce22473c6ffb0f94))
+-   **subscription:** Разделение настроек http и h2 ([2260d28](https://github.com/Gozargah/Marzban/commit/2260d285b012beff45de500d3e3737b4504a3efb))
+-   **subscription:** Мульти-режим для grpc ([a2ba2c0](https://github.com/Gozargah/Marzban/commit/a2ba2c009fb8f99ac3bfb8641763f200d6511c54))
+-   **subscription:** Singbox ws игнорирует wsSettings ([c02ef96](https://github.com/Gozargah/Marzban/commit/c02ef96fe55def332c8fa14430fe8acb48ee368f))
+-   **subscription:** Использование неправильной переменной в настройках ([70dfb6d](https://github.com/Gozargah/Marzban/commit/70dfb6d7e162952111f62675be673b4d4f6c3e83))
+-   **subscription:** Предотвращение использования noneSettings как настройки безопасности ([87dca23](https://github.com/Gozargah/Marzban/commit/87dca230b611c0c86f00c9ec9b66bde77a2bf9b3))
+-   Неверная конфигурация как внешняя ([c63f95a](https://github.com/Gozargah/Marzban/commit/c63f95a7c2c2f34a16df679dd0593a5f94570e68))
+-   **subscription:** Предотвращение создания network\_setting для reality ([fb77570](https://github.com/Gozargah/Marzban/commit/fb7757077801e104203a1ec372b775eb6e5715ed))
+-   **subscription:** Временное отключение shuffle, чтобы избежать отправки неверных данных ([e7d6756](https://github.com/Gozargah/Marzban/commit/e7d6756bb3e8d6e558769340326ae18356adae5d))
+-   **splithttp:** Значение по умолчанию для splithttp ([aa664a2](https://github.com/Gozargah/Marzban/commit/aa664a28acdd2d3af8894c7a14d689ea69e9cc3e))
+-   NOTIFY\_DAYS\_LEFT ([530649d](https://github.com/Gozargah/Marzban/commit/530649d6957b4f57fef10d19c82395a67c37f7ba))
+-   Ошибка Pydantic в user.links ([25c07ac](https://github.com/Gozargah/Marzban/commit/25c07ac5a25c2b8deb167a2c0012954ba5066bdd))
+-   Удаление RANDOMIZE\_SUBSCRIPTION\_CONFIGS ([cb7aa7a](https://github.com/Gozargah/Marzban/commit/cb7aa7a8d5d6669f54ed44a56f2d4bc72b7ac28b))
+-   **subscription:** Использование deepcopy для предотвращения конфликтов ([f7d20b6](https://github.com/Gozargah/Marzban/commit/f7d20b672c242a3153af830baf5e6e40200eb582))
+-   Совместимость Marzban-cli с python3.8 ([f3e6197](https://github.com/Gozargah/Marzban/commit/f3e6197454e70cf4db2dbd3ce8d3f61ec703d8a8))
+-   Предотвращение ошибки при входе, если request.client отсутствует ([d77eb30](https://github.com/Gozargah/Marzban/commit/d77eb30cca48e6f01a9307596dc03522d3eb59ac))
+-   **subscription:** Исправление потока Vless и заголовка tcp ([7a0a9ca](https://github.com/Gozargah/Marzban/commit/7a0a9ca4f6d14672cf069d4df20576907595e783))
+-   Отображение подписки в Hiddify в user\_subscription ([5169810](https://github.com/Gozargah/Marzban/commit/516981062612fea44736dd4460e1ab389d42956d))
+-   Аннулирование подписки не обновляет конфигурацию xray в Telegram-боте ([791a7f2](https://github.com/Gozargah/Marzban/commit/791a7f2f0845bc1b1a5b95f76b40832b86aef4f7))
+-   Изменение outbound тега на proxy в пользовательской конфигурации v2ray ([eb84a09](https://github.com/Gozargah/Marzban/commit/eb84a09da41ec9266080366d5cb6715bebde2400))
+-   Предотвращение дублирования имен в clash ([e37a3da](https://github.com/Gozargah/Marzban/commit/e37a3da5207df048f71970875fa126733f769241))
+-   **subscription:** Исправление потока Vless и заголовка tcp ([efc55ac](https://github.com/Gozargah/Marzban/commit/efc55ac3181a3f44c6e79d677b8c138f1d489566))
+-   **subscription:** Заголовок tcp без tls и пустой тип заголовка ([241d823](https://github.com/Gozargah/Marzban/commit/241d823460059714077a718a45f4cd646f77ba32))
+-   Исправление некоторых багов api ([a10745d](https://github.com/Gozargah/Marzban/commit/a10745dfb1a119bdbbb0db0f76fa4d0bae2c5875))
+-   Предотвращение передачи неожиданных переменных для генерации подписки ([f1395ee](https://github.com/Gozargah/Marzban/commit/f1395ee93253fbd7801ccb74119cc6afebbe3105))
+-   Избежание создания словаря при каждом запросе и удаление внешней проверки ([47d8336](https://github.com/Gozargah/Marzban/commit/47d8336dc48a6336173152e84d65eb320585bd98))
+-   Неправильное написание ALLOWED\_ORIGINS ([f0a7e21](https://github.com/Gozargah/Marzban/commit/f0a7e2187329c1689d31d34e95e59efc81f1d393))
+-   Проблема с Node\_user\_usages ([68dab4c](https://github.com/Gozargah/Marzban/commit/68dab4cd1092c9e452e8bcca151c40b8ec0f6bad))
+-   Ошибка Node\_usage ([1332c7a](https://github.com/Gozargah/Marzban/commit/1332c7ab0b06d43054d986d8d28e5bc10eac5e80))
+-   Ошибочный рефакторинг (использование неверного админа по полю) ([d7281c2](https://github.com/Gozargah/Marzban/commit/d7281c2c84b47aa6e8fddea287f7001c9b1702da))
+-   Рефакторинг функции validate\_dates для избежания дублирования кода ([aea3273](https://github.com/Gozargah/Marzban/commit/aea3273cd7c327d9870c435cb6a6c3d0741737d0))
+-   Telegram-бот не отправляет результат лимита пользователя ([0ebbff3](https://github.com/Gozargah/Marzban/commit/0ebbff30520fb0d5cfbf45f5ca15031fe9cc6bb4))
+-   **db:** Миграция настроек шума ([#1352](https://github.com/Gozargah/Marzban/pull/1352))
+-   **hosts:** Проверка наличия шума ([dcc9fd9](https://github.com/Gozargah/Marzban/commit/dcc9fd9e224a24c7b11e7047770d7799ab898136))
+-   **subscription:** Удаление поля network для sing-box ([f9c15a1](https://github.com/Gozargah/Marzban/commit/f9c15a1e61309351fb8935fd8e34eaef51c3f265))
+-   **Subscription:** Корректное создание списка proxy remarks для конфигурации clash ([#1357](https://github.com/Gozargah/Marzban/pull/1357))
+-   **config:** Http и allyes ([bc81290](https://github.com/Gozargah/Marzban/commit/bc81290e3e1454759cca8b38e2b52f35b2e1cba5))
+-   Clash-meta неожиданный аргумент 'remark' ([9d49a11](https://github.com/Gozargah/Marzban/commit/9d49a11d2381dd72ee6ef199d3cf23e73f4b81f0))
+-   **subscription:** Транспорт H3 ([a930ed4](https://github.com/Gozargah/Marzban/commit/a930ed41260857cca7726170db70afaa55ad62aa))
+-   Добавлен DASHBOARD\_PATH как базовый URL vites в dev-среде ([327e79a](https://github.com/Gozargah/Marzban/commit/327e79afaeadac6b04d6084cf03577273a8bf28a))
+-   Циклический импорт ([75bcdd9](https://github.com/Gozargah/Marzban/commit/75bcdd98825b4d44a206e78871a9d3cd81af0dfb))
+
+💅 Рефакторинг
+
+-   **api:** ⚠️ Добавлен роутер к API ([cf6d8ac](https://github.com/Gozargah/Marzban/commit/cf6d8ac13c854f6b3e335fcc1a24ac57c0d5468a))
+-   **admin-endpoints:** ⚠️ Рефакторинг админских точек доступа и добавлены две новые зависимости ([e87e15b](https://github.com/Gozargah/Marzban/commit/e87e15bc28dc432c06ff9b52a1cd74c845ccbc74))
+-   **node-endpoints:** ⚠️ Рефакторинг точек доступа узлов и добавлены две новые зависимости для узлов ([cf4472b](https://github.com/Gozargah/Marzban/commit/cf4472b46fbf6d6985cdcc9f04e1ea10e3125901))
+-   **system-endpoints:** ⚠️ Рефакторинг системных точек доступа ([d631db5](https://github.com/Gozargah/Marzban/commit/d631db54e4f7aabdc58f545536025efb8a56f876))
+-   **core-endpoints:** ⚠️ Рефакторинг основных точек доступа ([ee341cb](https://github.com/Gozargah/Marzban/commit/ee341cb88003c92982bb8ef785d45af584bc6994))
+-   **usertemplates-endpoints:** ⚠️ Рефакторинг точек доступа шаблонов пользователей ([6918f7f](https://github.com/Gozargah/Marzban/commit/6918f7fa09e460a123578266920113037637e3c2))
+-   **home-endpoints:** ⚠️ Рефакторинг точек доступа главной страницы ([36532a9](https://github.com/Gozargah/Marzban/commit/36532a97916a8e7a7d046e162effb9c9aabf5432))
+-   **sub-endpoints:** ⚠️ Рефакторинг точек доступа подписок ([215bf32](https://github.com/Gozargah/Marzban/commit/215bf32d5974ff1b9c5eda62c29cc22fcc4ec33b))
+-   **user:** ⚠️ Рефакторинг API пользователя и исправление функции validate_dates ([b551447](https://github.com/Gozargah/Marzban/commit/b5514472e82240edbd232830ba0c45b8fa253f12))
+
+📖 Документация
+
+-   Шаблоны для V2ray и sing-box ([1f0d8dd](https://github.com/Gozargah/Marzban/commit/1f0d8dd30ab4eea962c5dba9934135f074d5a65c))
+-   Добавлены поддерживаемые сети для sing-box и v2ray ([4209ef4](https://github.com/Gozargah/Marzban/commit/4209ef477443b7909e27ccbbdb2662f3d46c2856))
+
+🏡 Технические задачи
+
+-   **subscription:** Использование union вместо динамического типа ([d19f567](https://github.com/Gozargah/Marzban/commit/d19f567b56d07cdf9d6c29453d9224dccbbcd922))
+-   **subscription:** Настраиваемые параметры конфигурации для v2ray-json и sing-box ([68a7936](https://github.com/Gozargah/Marzban/commit/68a79364fbc348ae5482c80709e2a2c1e94045e4))
+-   **subscription:** Использование fsring вместо if else ([9b6741a](https://github.com/Gozargah/Marzban/commit/9b6741af0bc7f3c9f9b99330efa8805e2f65a4c7))
+-   **subscription:** Использование deepcopy вместо copy ([d5822b7](https://github.com/Gozargah/Marzban/commit/d5822b7b710d5ae1325ed781ecd4e88859941106))
+-   Исправление значения переменной env ([a287147](https://github.com/Gozargah/Marzban/commit/a28714769ba6bd9fd6514a212641dfed25b29cd1))
+-   Удаление MASTER\_SERVER\_USAGE\_RATIO ([8695b8c](https://github.com/Gozargah/Marzban/commit/8695b8c644c034a31a6cd2caaca5e3162d2d9fd7))
+-   Удаление CSS класса Box Shadow, изменение "Host" на "Master" в CoreSettingsModal.tsx ([eac8f06](https://github.com/Gozargah/Marzban/commit/eac8f062848e7c86b4954834c0b98ee165366e79))
+-   Изменение названия белого списка входа ([ae5b6a6](https://github.com/Gozargah/Marzban/commit/ae5b6a68e4102cc8ebb6833f0b2e1677993aa34f))
+-   Перенос маршрута главной страницы в модуль роутеров ([d87fee5](https://github.com/Gozargah/Marzban/commit/d87fee5ccc4c6c2cd94300f52ff83ea2d408368f))
+-   **subscription:** Создание исходящих соединений для Dialer ([30201ba](https://github.com/Gozargah/Marzban/commit/30201ba5f606c6c40cfa05ca7603a173a0391b4a))
+
+⚠️ Критические изменения
+
+-   **api:** ⚠️ Добавлен роутер к API ([cf6d8ac](https://github.com/Gozargah/Marzban/commit/cf6d8ac13c854f6b3e335fcc1a24ac57c0d5468a))
+-   **admin-endpoints:** ⚠️ Рефакторинг админских точек доступа и добавлены две новые зависимости ([e87e15b](https://github.com/Gozargah/Marzban/commit/e87e15bc28dc432c06ff9b52a1cd74c845ccbc74))
+-   **node-endpoints:** ⚠️ Рефакторинг точек доступа узлов и добавлены две новые зависимости для узлов ([cf4472b](https://github.com/Gozargah/Marzban/commit/cf4472b46fbf6d6985cdcc9f04e1ea10e3125901))
+-   **system-endpoints:** ⚠️ Рефакторинг системных точек доступа ([d631db5](https://github.com/Gozargah/Marzban/commit/d631db54e4f7aabdc58f545536025efb8a56f876))
+-   **core-endpoints:** ⚠️ Рефакторинг основных точек доступа ([ee341cb](https://github.com/Gozargah/Marzban/commit/ee341cb88003c92982bb8ef785d45af584bc6994))
+-   **usertemplates-endpoints:** ⚠️ Рефакторинг точек доступа шаблонов пользователей ([6918f7f](https://github.com/Gozargah/Marzban/commit/6918f7fa09e460a123578266920113037637e3c2))
+-   **home-endpoints:** ⚠️ Рефакторинг точек доступа главной страницы ([36532a9](https://github.com/Gozargah/Marzban/commit/36532a97916a8e7a7d046e162effb9c9aabf5432))
+-   **sub-endpoints:** ⚠️ Рефакторинг точек доступа подписок ([215bf32](https://github.com/Gozargah/Marzban/commit/215bf32d5974ff1b9c5eda62c29cc22fcc4ec33b))
+-   **user:** ⚠️ Рефакторинг API пользователя и исправление функции validate_dates ([b551447](https://github.com/Gozargah/Marzban/commit/b5514472e82240edbd232830ba0c45b8fa253f12))
+
 
 Подробнее тут: **https://github.com/Gozargah/Marzban/releases/tag/v0.7.0**
 
@@ -152,6 +186,12 @@ sudo bash -c "$(curl -sL https://github.com/DigneZzZ/Marzban-scripts-beta/raw/ma
 ```
 
 На выходе вы получите установленный Marzban, но без домена.
+
+## Создайте администратора для входа
+
+```bash
+sudo marzban cli admin create --sudo
+```
 
 ## Привязка домена в CloudFlare.
 
