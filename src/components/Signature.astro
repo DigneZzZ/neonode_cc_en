@@ -5,9 +5,8 @@ import {
     getSupportedLanguages,
     type SupportedLanguage,
 } from "src/utils/i18n";
-const translate = useUITranslations(lang);
 const lang = getLangFromUrl(Astro.url);
-
+const translate = useUITranslations(lang);
 ---
 
 <section class="cody-bg space-y-1 sm:space-y-2">
