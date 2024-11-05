@@ -1,0 +1,464 @@
+title: "Enhancing VPS Security on Ubuntu and Debian: A Practical Guide"
+description: "This article is a comprehensive practical guide to enhancing the security of your VPS on Ubuntu and Debian systems. You will learn how to set up secure authentication using SSH keys, install and configure Fail2ban to protect against brute-force attacks, change the default SSH port for increased security, and configure the UFW firewall to control incoming and outgoing connections. The recommendations are particularly relevant for servers used as VPNs and will help you effectively protect your server from most common threats."
+tags:
+   - VPS
+   - Security
+   - SSH
+   - Fail2ban
+   - UFW
+   - Ubuntu
+   - Debian
+   - SSH Keys
+   - Firewall
+   - Brute-force Protection
+series: SecurityGuide
+draft: false
+pubDate: 11 05 2024
+---
+
+# Enhancing VPS Security on Ubuntu and Debian: A Practical Guide
+
+This cheat sheet contains a minimal set of steps to improve the security of your Ubuntu or Debian-based server. These recommendations are especially useful for VPS intended for VPN operation.
+
+## 🛡️ Basic Security Principles
+
+Server security settings are not the main defense. The main thing is the administrator's common sense. Here are the basic rules:
+
+- **Do not store your server account password in online password storage** (there have been many password leaks) or in a TXT file on your desktop. It is best to keep the password only in your head and periodically update it; in extreme cases, use a paper notebook. You can also use open-source password managers like [KeePassXC](https://keepassxc.org/) or [Bitwarden](https://bitwarden.com/), which are relatively safe. If you store passwords in the browser and don't want to change your habits, be sure to use a master password.
+
+- **Use complex passwords** with case sensitivity and special characters.
+
+- **Strengthen the protection of the Email** linked to your server's control panel account as much as possible.
+
+- **Use two-factor authentication for Email** and the server administrator's personal account. It is advisable to use 2FA programs with token-based authentication like [Aegis](https://f-droid.org/en/packages/com.beemdevelopment.aegis/), 2FA, Yandex Key, etc., since SMS can be intercepted by attackers using a clone of your SIM card (a rare case, but it happens). In most cases, I use [Aegis](https://f-droid.org/en/packages/com.beemdevelopment.aegis/).
+
+- **Do not save passwords in FTP clients** — viruses often extract information from FTP clients.
+
+- **Do not share the main administrator account credentials with anyone**, and if there is a need to grant access, create a new account with limited rights for that purpose. Don't forget to delete the temporary account afterward.
+
+## 🔐 Installing an SSH Key: Secure Passwordless Authentication
+
+Using SSH keys is a simple and reliable way to ensure security when connecting to a server. The main advantage of SSH keys over a password is that there is no need to transmit a password over the network each time you authenticate, making server access more secure.
+
+### Generating SSH Keys
+
+To set up key-based authentication, you need to generate two files: **private** and **public** keys. Here's how to do it:
+
+1. Enter the following command to generate an RSA key pair:
+
+   ```bash
+   ssh-keygen -t rsa -b 2048
+   ```
+
+2. The program will ask for a directory to save the keys and offer to enter a **passphrase** for additional protection. This password can be left empty, but it's better to enter a complex passphrase for greater security. If you want to use the default settings, press **Enter** — the keys will be saved in the `~/.ssh` directory.
+
+### Viewing Generated Files
+
+After generating the keys, navigate to the `~/.ssh` directory where they were saved:
+
+```bash
+cd ~/.ssh
+```
+
+In this directory, you will see two files:
+
+- **id_rsa** — this is your private key, which should be stored securely on your local computer and never shared with others.
+
+- **id_rsa.pub** — this is the public key, which needs to be transferred to the server.
+
+### Copying the Public Key to the Server
+
+To authenticate on the server using the SSH key, transfer the public key to the server. One convenient way to copy the key is to use programs that support SFTP, such as [Filezilla](https://filezilla-project.org/), or other SFTP managers.
+
+After copying, open the **authorized_keys** file on the server to register your public key:
+
+1. Copy the contents of `id_rsa.pub` into the `authorized_keys` file, appending it to the end of the file:
+
+   ```bash
+   cat id_rsa.pub >> ~/.ssh/authorized_keys
+   ```
+
+   This `authorized_keys` file should be located in the `~/.ssh` directory on the server.
+
+### Configuring OpenSSH for Key-Based Authentication
+
+Now you need to make changes to the OpenSSH configuration on the server to enable key-based authentication:
+
+1. Open the OpenSSH configuration file:
+
+   ```bash
+   nano /etc/ssh/sshd_config
+   ```
+
+2. Find or add the following lines to activate key-based authentication and disable undesirable methods:
+
+   ```bash
+   PubkeyAuthentication yes  
+   AuthorizedKeysFile %h/.ssh/authorized_keys  
+   RhostsRSAAuthentication no  
+   HostbasedAuthentication no  
+   PermitEmptyPasswords no
+   ```
+
+3. To completely disable password authentication, set the `PasswordAuthentication` parameter to `no`. This is also done in the `sshd_config` file:
+
+   ```bash
+   PasswordAuthentication no
+   ```
+
+   > **Note**: In Ubuntu 24.04, this parameter may be overridden in a separate configuration file `/etc/ssh/sshd_config.d/50-cloud-init.conf`. Make the change there if editing `sshd_config` does not work.
+
+4. Additionally, for Ubuntu 24.04, you may need to add the following to ensure RSA algorithm support:
+
+   ```bash
+   PubkeyAcceptedAlgorithms +ssh-rsa
+   ```
+
+### Setting File Permissions for Key Files
+
+Ensure the correct permissions on the SSH directories and files so that only the current user can read them:
+
+```bash
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+```
+
+### Restarting the SSH Server
+
+To apply all changes, restart the SSH server:
+
+```bash
+systemctl restart ssh
+```
+
+Now the SSH key-based authentication setup is complete! You can securely connect to the server without a password, using only your private key.
+
+# 🚫 Installing and Configuring Fail2ban
+
+To prevent password brute-force attempts via SSH, use Fail2ban. After incorrect password attempts, Fail2ban will block the IP address from which the password was being guessed. You can define the number of allowed password attempts and the duration of the block yourself. For example, you can set up a one-hour block after five failed SSH login attempts.
+
+## Installing Fail2ban on Ubuntu
+
+```bash
+apt update -y && apt upgrade -y
+apt-get install fail2ban
+```
+
+To start the Fail2ban service, enter the following commands (for reference, since Fail2ban should start automatically):
+
+```bash
+systemctl enable fail2ban
+systemctl start fail2ban
+```
+
+To check the operational status of the Fail2ban service:
+
+```bash
+systemctl status fail2ban
+```
+
+## Basics of Configuring Fail2ban: Understanding Configuration and Key Parameters
+
+Fail2ban is a tool that protects your server from attacks by blocking IP addresses that too frequently make unsuccessful access attempts. This is especially useful for protecting SSH, FTP, HTTP, and other services. Fail2ban configuration is universal and does not depend on a specific Linux distribution.
+
+### Fail2ban Configuration Files
+
+All Fail2ban configuration files are located in the `/etc/fail2ban` directory. The main configuration file is `jail.conf`. However, it is **not recommended to modify it directly**: when Fail2ban is updated, this file may be overwritten, and the changes you made will be lost.
+
+For safe configuration changes, you should use additional files located in `/etc/fail2ban/jail.d`. They allow you to add and modify parameters for specific services, while the main settings remain unchanged. These files use sections called *jails* — each rule is responsible for protecting a specific service, such as SSH, HTTP, or FTP.
+
+Example of a simple enabling of protection for SSH:
+
+```ini
+[sshd]
+enabled = true
+```
+
+### Main Fail2ban Configuration Parameters
+
+When configuring Fail2ban, the following parameters are important, which can be set for each jail in the configuration file:
+
+- **`ignoreip`** — a list of IP addresses that should never be blocked by Fail2ban, regardless of their activity. This allows you to add your own IP address to avoid accidental blocking. You can also specify a subnet or DNS name.
+
+  ```ini
+  ignoreip = 192.168.1.1 10.0.0.0/24 mytrustedhost.com
+  ```
+
+- **`bantime`** — the duration of the IP address block in seconds. Once this time expires, the address will automatically be removed from the blocked list.
+
+  ```ini
+  bantime = 3600  # Block for 1 hour
+  ```
+
+- **`maxretry`** — the number of unsuccessful access attempts before blocking. This parameter defines how many times a user can incorrectly enter a password or perform other suspicious actions before the IP is blocked.
+
+  ```ini
+  maxretry = 3
+  ```
+
+- **`port`** — specifies on which port or ports the protected service operates. You can specify one or multiple ports.
+
+  ```ini
+  port = ssh
+  ```
+
+- **`filter`** — the name of the filter that Fail2ban will use to detect suspicious activity. Each filter searches for certain patterns in log files. For example, for SSH, the `sshd` filter is used, which is located at `/etc/fail2ban/filter.d/sshd.conf`.
+
+  ```ini
+  filter = sshd
+  ```
+
+- **`logpath`** — the path to the log file where Fail2ban will monitor events. Typically, for SSH, this is `/var/log/auth.log`.
+
+  ```ini
+  logpath = /var/log/auth.log
+  ```
+
+- **`action`** — actions that are performed when Fail2ban detects activity matching the search criteria. For example, the action may include blocking the IP using iptables.
+
+  ```ini
+  action = %(action_)s
+  ```
+
+### Fail2ban Configuration Files Reading Order
+
+Fail2ban reads configuration files in a certain order. `.local` files have priority over `.conf`, which makes it easy to override settings without changing the original files. The file reading order:
+
+1. `/etc/fail2ban/jail.conf` — default base settings.
+
+2. `/etc/fail2ban/jail.d/*.conf` — settings added by the administrator for additional services.
+
+3. `/etc/fail2ban/jail.local` — user-defined settings.
+
+4. `/etc/fail2ban/jail.d/*.local` — administrator settings that have the highest priority.
+
+### Additional Fail2ban Configuration Files
+
+In addition to `jail.conf`, Fail2ban uses other files for management and configuration:
+
+- `action.d/*.*` — defines what actions will be performed when suspicious activity is detected.
+
+- `fail2ban.conf` — the main configuration file for general settings.
+
+- `fail2ban.d/*.*` — user settings for Fail2ban.
+
+- `filter.d/*.*` — patterns for detecting suspicious actions in logs.
+
+- `paths-arch.conf`, `paths-common.conf`, `paths-debian.conf`, `paths-opensuse.conf` — files for defining paths depending on the operating system.
+
+Using these files and parameters, you can finely tune protection for various services, minimizing the risk of hacking and increasing the security of your server.
+
+## Configuring Fail2ban for SSH
+
+> Source: https://homehosted.ru/ustanovka-i-nastrojka-fail2ban
+
+The SSH jail works in Fail2Ban by default immediately after the service is installed. But if you need to make changes to its operation, you need to create a new jail file. To do this, we will use the nano editor:
+
+```
+nano /etc/fail2ban/jail.d/ssh.conf
+```
+
+Add the following lines to the created file:
+
+```ini
+[sshd]
+enabled = true
+port = ssh
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 3
+findtime = 300
+backend = systemd
+```
+
+`sshd` — name for the rule;
+
+`enabled` allows you to quickly enable (true) or disable (false) the rule;
+
+`port` — target service port. Accepts a name or numerical designation;
+
+`filter` — the filter (search criterion) that will be used to search for suspicious actions. Essentially, this is the name of a file from the `/etc/fail2ban/filter.d` directory without the `.conf` at the end;
+
+`logpath` — the location of the log file where the filter will look for suspicious activity based on the described criteria;
+
+`maxretry` — the number of actions allowed before a ban;
+
+`findtime` — the time in seconds during which `maxretry` is counted.
+
+To apply the changes, restart the service:
+
+```bash
+systemctl restart fail2ban
+```
+
+The configuration we specified will block IP addresses after 3 failed login attempts to your server via SSH. The block lasts for 300 seconds, and all suspicious actions will be logged in the `/var/log/auth.log` file.
+
+You can adjust the parameters to suit your needs.
+
+## 🔄 Changing the Default Port for SSH Connections in Ubuntu and Debian
+
+By default, the SSH server accepts incoming connections on **TCP port 22**. This port is well-known, so many attackers specifically target it, trying to brute-force passwords. Changing the default port for SSH reduces the risk of such attacks, making your server less visible to automated scanners.
+
+### How to Change the SSH Port
+
+1. **Connect to the server.** Open a connection to the server using an SSH client, such as PuTTY (on Windows) or built-in SSH commands (on macOS and Linux).
+
+2. **Install net-tools.** Ensure that the `net-tools` utilities are installed on your server so you can check open ports. Install them using the command:
+
+   ```bash
+   sudo apt install net-tools
+   ```
+
+3. **Check occupied ports.** See which ports are already used on the server to choose an unused port for SSH:
+
+   ```bash
+   sudo netstat -tupln | grep LISTEN
+   ```
+
+   This command will display a list of active ports and help you choose a free port.
+
+4. **Change the port in the SSH configuration.** Open the `sshd_config` configuration file, where the port for SSH is specified:
+
+   ```bash
+   sudo nano /etc/ssh/sshd_config
+   ```
+
+5. **Find the line with the port.** Find the line where it says `#Port 22`. Uncomment it by removing the `#` symbol and replace `22` with your chosen port number. For example, you can use port `2222` or any other free port:
+
+   ```plaintext
+   Port 2222
+   ```
+
+6. **Save changes.** After editing, save the file by pressing `CTRL + O`, then confirm saving by pressing **Enter**, and exit the editor by pressing `CTRL + X`.
+
+7. **Configure the firewall.** Ensure that the new SSH port is open in the firewall (if using UFW):
+
+   ```bash
+   sudo ufw allow 2222/tcp
+   ```
+
+8. **Restart SSH to apply changes.** Restart the SSH server for the new settings to take effect:
+
+   ```bash
+   sudo service ssh restart
+   ```
+
+Now the SSH server will operate on the new port.
+
+### Additional Configuration for Ubuntu 24.04
+
+In Ubuntu 24.04, changing the SSH port requires an additional step. In this distribution, some SSH settings are stored in a separate configuration file, which can override changes made in the main `sshd_config` file. Therefore, you need to change the port also in the `50-cloud-init.conf` file:
+
+1. **Edit the `50-cloud-init.conf` file.** Open the configuration file:
+
+   ```bash
+   sudo nano /etc/ssh/sshd_config.d/50-cloud-init.conf
+   ```
+
+2. **Change the port.** Find the line with `#Port 22`, uncomment it, and specify the same new port as in the main file:
+
+   ```plaintext
+   Port 2222
+   ```
+
+3. **Save and restart.** Save the file (`CTRL + O` and **Enter**) and exit (`CTRL + X`). After that, restart the SSH server again:
+
+   ```bash
+   sudo systemctl restart ssh
+   ```
+
+### Connecting to the Server via the New Port
+
+Now, to connect to the server via SSH, use the specified port. For example, to connect through the terminal, you can specify the port using the `-p` flag:
+
+```bash
+ssh -p 2222 username@server_ip
+```
+
+> ⚠️ **Important**: Don't forget to record the new port and update the firewall settings to avoid losing access to the server.
+
+### Automation Script:
+
+For everyone who has read up to this point, a **bonus**.
+
+An automation script to change the SSH port:
+
+```bash
+bash <(wget -qO- https://dignezzz.github.io/server/ssh-port.sh)
+```
+
+After running the script, you will be prompted to enter the new port, and the script will change everything by itself. It will even add the corresponding entry in UFW/iptables.
+
+# 🔥 Configuring UFW Firewall Rules to Protect the Server
+
+Using **Uncomplicated Firewall (UFW)** is a convenient way to set up server protection. UFW is a front-end for `iptables` that greatly simplifies firewall rule management.
+
+## Installing and Basic Configuration of UFW
+
+1. **Installing UFW**. Let's start by installing UFW if it is not already installed:
+
+   ```bash
+   sudo apt install ufw
+   ```
+
+2. **Setting default rules**. First, set the base rules for access management. By default, UFW will block all incoming connections and allow all outgoing. This means the server can initiate connections to the outside world, but external connections to the server will be blocked.
+
+   ```bash
+   sudo ufw default deny incoming
+   sudo ufw default allow outgoing
+   ```
+
+   These commands help prevent unauthorized access, leaving only the ports you open yourself accessible.
+
+## Allowing SSH Connections
+
+Since SSH is the main way of remote access, you need to allow connections on the SSH port to avoid losing the ability to connect to the server. Use the following command, substituting `PORT` with the SSH port you configured (by default, it's `22`):
+
+```bash
+sudo ufw allow PORT
+```
+
+> **Example**: If you changed the SSH port to `2222`, use `sudo ufw allow 2222`.
+
+Similarly, you can allow access to other important services, such as web servers (ports `80` for HTTP and `443` for HTTPS):
+
+```bash
+sudo ufw allow 80
+sudo ufw allow 443
+```
+
+## Enabling UFW
+
+After configuring the rules, enable UFW so the firewall starts protecting the server. To do this, run the command:
+
+```bash
+sudo ufw enable
+```
+
+After activation, UFW will display confirmation that the firewall is enabled and running.
+
+## Restarting Fail2ban
+
+If you are using **Fail2ban** to protect against brute-force attacks, it is recommended to restart Fail2ban after enabling UFW so it works correctly with the new firewall rules:
+
+```bash
+sudo systemctl restart fail2ban
+```
+
+## Checking Status and Additional Settings
+
+To check the current UFW rules, you can use the following command:
+
+```bash
+sudo ufw status verbose
+```
+
+This command will show a list of active rules and the current firewall status.
+
+> **Additionally**: More detailed documentation on UFW can be found on the [DigitalOcean website](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu-22-04).
+
+Now UFW is configured and active, blocking all unnecessary incoming connections and opening only the necessary ports.
+
+# 📌 Conclusion
+
+By following these recommendations, you will significantly enhance the security of your VPS. These steps will protect the server from most attacks and help maintain a high level of security.
