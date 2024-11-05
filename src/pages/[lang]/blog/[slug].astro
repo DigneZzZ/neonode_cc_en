@@ -9,7 +9,7 @@ import {
 } from "@/utils";
 import { getSupportedLanguages, type SupportedLanguage } from "src/utils/i18n";
 import type { CollectionEntry } from "astro:content";
-
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 export const getStaticPaths = (async () => {
 	const blogEntries = await getAllPosts();
 	return getSupportedLanguages().flatMap((lang) => {
@@ -36,6 +36,7 @@ const { Content } = await post.render();
 ---
 
 <BlogPost post={post as CollectionEntry<"blog">}>
+	<LanguageSwitcher />
 	<Content />
 	<Signature />
 </BlogPost>

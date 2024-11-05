@@ -1,0 +1,21 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+// Определяем текущий язык по URL
+const currentLanguage = Astro.url.pathname.startsWith('/en') ? 'en' : 'ru';
+
+// Определяем целевой язык для переключения
+const targetLanguage = currentLanguage === 'en' ? 'ru' : 'en';
+
+// Текст для ссылки
+const languageText = currentLanguage === 'en' ? 'Читать на Русском' : 'Read in English';
+
+// Генерация URL без префикса для русского языка
+const localizedUrl = targetLanguage === 'ru' 
+  ? Astro.url.pathname.replace(/^\/en/, '')  // Убираем префикс /en, если переключаемся на русский
+  : getRelativeLocaleUrl('en', Astro.url.pathname);  // Для английского добавляем /en
+---
+
+<div>
+  <a href={localizedUrl}>{languageText}</a>
+</div>
