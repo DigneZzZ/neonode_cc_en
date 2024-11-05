@@ -11,7 +11,7 @@ import {
 import type { CollectionEntry } from "astro:content";
 
 
-const MAX_POSTS = 20;
+const MAX_POSTS = 10;
 const allPosts = await getAllPosts();
 const allPostsByDate = sortMDByDate(allPosts);
 const allPostsByPinned = sortMDByPinned(allPostsByDate);

@@ -11,11 +11,11 @@ import {
 import type { CollectionEntry } from "astro:content";
 
 
-const MAX_POSTS = 20;
+const MAX_POSTS = 10;
 const allPosts = await getAllPosts();
-const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS);
+const allPostsByDate = sortMDByDate(allPosts);
 const allPostsByPinned = sortMDByPinned(allPostsByDate);
-const filteredPostsByLanguage = filterByLanguage(allPostsByPinned, "ru");
+const filteredPostsByLanguage = filterByLanguage(allPostsByPinned, "ru").slice(0, MAX_POSTS);
 
 const tech: Array<{ title: string; desc: string; href: string }> = [
 {
