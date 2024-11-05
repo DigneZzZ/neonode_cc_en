@@ -23,40 +23,57 @@ const localizedUrl = getLocalizedUrl(Astro.url, targetLanguage as SupportedLangu
 </div>
 
 <style>
+  .language-switcher {
+      margin-bottom: 2rem; /* Увеличенный нижний отступ */
+  }
+
   .language-switcher a {
-      padding: 0.5em 1em; /* Отступы */
-      border-radius: 8px; /* Округлые края */
+      padding: 0.5em 1em;
+      border-radius: 8px;
       font-weight: bold;
-      text-decoration: none; /* Убираем подчеркивание */
-      border: 1px solid; /* Граница будет адаптироваться к теме */
-      transition: background-color 0.3s ease, color 0.3s ease;
+      text-decoration: none;
+      border: 2px solid;
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      animation: blink-border 1.5s steps(2, start) infinite; /* Анимация мигания */
   }
 
   /* Светлая тема */
   @media (prefers-color-scheme: light) {
       .language-switcher a {
-          background-color: #f2f2f2; /* Светлый фон */
-          color: #333; /* Основной цвет текста */
-          border-color: #ddd; /* Тонкая граница */
+          background-color: #f2f2f2;
+          color: #333;
+          border-color: #ddd;
       }
 
       .language-switcher a:hover {
-          background-color: #e0e0e0; /* Фон при наведении */
-          color: #000; /* Тёмнее текст при наведении */
+          background-color: #e0e0e0;
+          color: #000;
       }
   }
 
   /* Темная тема */
   @media (prefers-color-scheme: dark) {
       .language-switcher a {
-          background-color: #333; /* Темный фон */
-          color: #f2f2f2; /* Светлый цвет текста */
-          border-color: #444; /* Граница немного светлее фона */
+          background-color: #333;
+          color: #f2f2f2;
+          border-color: #444;
       }
 
       .language-switcher a:hover {
-          background-color: #444; /* Светлее фон при наведении */
-          color: #fff; /* Белый текст при наведении */
+          background-color: #444;
+          color: #fff;
+      }
+  }
+
+  /* Мигание рамки */
+  @keyframes blink-border {
+      0%, 100% {
+          border-color: #26785c; /* Основной цвет мигающей рамки */
+      }
+      50% {
+          border-color: transparent; /* Прозрачность для эффекта мигания */
       }
   }
 </style>
