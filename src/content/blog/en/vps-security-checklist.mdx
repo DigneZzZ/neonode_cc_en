@@ -518,6 +518,122 @@ sudo ufw reset
 
 Now UFW is configured and active, blocking all unnecessary incoming connections and opening only the necessary ports.
 
+# Enhanced SSH Security and Hardening - SSH-Audit
+
+There is a well-established site: https://www.ssh-audit.com/
+
+What can it help you do?
+
+1. It allows you to test the security of your SSH connection based on a strict security policy.
+2. On the site, you will find all the essential and critical steps to configure your server.
+
+For a complete set of security commands, refer to this page: https://www.ssh-audit.com/hardening_guides.html
+
+Let’s walk through an example for Ubuntu 24.04:
+
+## 1. Regenerating RSA and ED25519 Keys
+
+1. Remove existing SSH keys:
+   ```bash
+   rm /etc/ssh/ssh_host_*
+   ```
+   **Description**: This command deletes all existing SSH keys in `/etc/ssh/` to ensure a clean start for generating new keys.
+
+2. Generate a new RSA key:
+   ```bash
+   ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
+   ```
+   **Description**: Creates a new RSA key with a length of 4096 bits, stored at `/etc/ssh/ssh_host_rsa_key`. The `-N ""` parameter sets an empty passphrase.
+
+3. Generate a new ED25519 key:
+   ```bash
+   ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
+   ```
+   **Description**: Creates a new ED25519 key stored at `/etc/ssh/ssh_host_ed25519_key`. ED25519 keys offer a faster and more secure alternative to RSA.
+
+## 2. Removing Weak Diffie-Hellman Groups
+
+**Small Diffie-Hellman groups** are sets of numbers used for secure key exchanges in the Diffie-Hellman algorithm. Groups with inadequate length pose a security risk.
+
+### What is a Diffie-Hellman Group?
+Diffie-Hellman (DH) is a method for secure cryptographic key exchange, enabling two parties to establish a shared secret key over an unsecured connection. It relies on complex mathematical operations with very large numbers, known as Diffie-Hellman groups.
+
+### Why Are Small Groups Insecure?
+Larger groups are more resistant to brute-force attacks. Small groups (less than 3072 bits) are vulnerable, as they can be cracked more easily with modern computational power.
+
+### How This Affects Security
+Using small groups increases the risk of attack. To mitigate this, filter out groups smaller than 3072 bits.
+
+#### Command Context
+
+   ```bash
+   awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.safe
+   ```
+   **Description**: This command uses `awk` to filter out Diffie-Hellman groups with sizes below 3072 bits, saving the secure groups in `/etc/ssh/moduli.safe`.
+
+   ```bash
+   mv /etc/ssh/moduli.safe /etc/ssh/moduli
+   ```
+   **Description**: Moves the filtered, secure groups back to `/etc/ssh/moduli`.
+
+## 3. Enabling RSA and ED25519 Keys
+
+1. Enable HostKey directives for RSA and ED25519:
+   ```bash
+   sed -i 's/^\#HostKey \/etc\/ssh\/ssh_host_\(rsa\|ed25519\)_key$/HostKey \/etc\/ssh\/ssh_host_\1_key/g' /etc/ssh/sshd_config
+   ```
+   **Description**: Uses `sed` to edit the SSH configuration file, uncommenting lines associated with HostKey for RSA and ED25519 keys, allowing OpenSSH to use these keys.
+
+## 4. Restricting Supported Algorithms
+
+1. Add strict restrictions for key exchange, cipher, and MAC algorithms:
+   ```bash
+   echo -e "\n# Restrict key exchange, cipher, and MAC algorithms, as per sshaudit.com\n# hardening guide.\nKexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256\nCiphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr\nMACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128-etm@openssh.com\nHostKeyAlgorithms ssh-ed25519,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-512,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com" > /etc/ssh/sshd_config.d/ssh-audit_hardening.conf
+   ```
+   **Description**: Creates a new file `/etc/ssh/sshd_config.d/ssh-audit_hardening.conf`, setting restrictions on supported key exchange, cipher, and MAC algorithms to enhance security.
+
+## 5. Restarting the SSH Server
+
+1. Restart the OpenSSH service:
+   ```bash
+   service ssh restart
+   ```
+   **Description**: Restarts the SSH server to apply all changes.
+
+## 6. Implementing Connection Rate Limits
+
+1. Enable connection rate limiting with iptables for IPv4:
+   ```bash
+   iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --set
+   iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 10 --hitcount 10 -j DROP
+   ```
+   **Description**: Configures iptables to limit incoming connections on port 22 (SSH), allowing only 10 new connections within 10 seconds from a single source, protecting against DDoS attacks on SSH.
+
+2. Apply the same limit for IPv6:
+   ```bash
+   ip6tables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --set
+   ip6tables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 10 --hitcount 10 -j DROP
+   ```
+   **Description**: A similar setup for IPv6 to ensure consistent protection.
+
+## 7. Persisting iptables Rules After Reboot
+
+1. Install `netfilter-persistent` and `iptables-persistent`:
+   ```bash
+   DEBIAN_FRONTEND=noninteractive apt install -q -y netfilter-persistent iptables-persistent
+   ```
+   **Description**: Installs utilities to save and restore iptables rules on system reboot.
+
+2. Save iptables rules:
+   ```bash
+   service netfilter-persistent save
+   ```
+   **Description**: Saves current iptables rules to apply them automatically after reboot.
+
+## Conclusion
+
+Implementing the commands outlined at https://www.ssh-audit.com/hardening_guides.html is highly recommended for all production servers. Rest assured, these steps will enhance security without breaking functionality.
+
 # 📌 Conclusion
 
 By following these recommendations, you will significantly enhance the security of your VPS. These steps will protect the server from most attacks and help maintain a high level of security.
