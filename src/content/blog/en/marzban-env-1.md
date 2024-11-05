@@ -23,25 +23,25 @@ Marzban now supports automated notifications sent to webhooks when specific thre
 
 - **NOTIFY_IF_DATA_USAGE_PERCENT_REACHED** — sends a notification when a user’s traffic usage reaches 80% or another specified value.
   
-  ``` 
+  ```bash 
   NOTIFY_IF_DATA_USAGE_PERCENT_REACHED=True 
   ```
 
 - **NOTIFY_IF_DAYS_LEFT_REACHED** — sends a notification a few days before the user’s access expires, with a default of 3 days.
 
-  ``` 
+  ```bash
   NOTIFY_IF_DAYS_LEFT_REACHED=True 
   ```
 
 - **NOTIFY_DAYS_LEFT** — defines the number of days before expiration to trigger a notification.
 
-  ``` 
+  ```bash 
   NOTIFY_DAYS_LEFT=3,7 
   ```
 
 - **NOTIFY_REACHED_USAGE_PERCENT** — sets the traffic usage percentage at which to send notifications.
 
-  ``` 
+  ```bash 
   NOTIFY_REACHED_USAGE_PERCENT=80,90 
   ```
 

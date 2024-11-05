@@ -23,25 +23,25 @@ pubDate: 11 05 2024
 
 - **NOTIFY_IF_DATA_USAGE_PERCENT_REACHED** — уведомление, если объём трафика пользователя достиг 80% или другого установленного значения.
   
-  ``` 
+  ```bash
   NOTIFY_IF_DATA_USAGE_PERCENT_REACHED=True 
   ```
 
 - **NOTIFY_IF_DAYS_LEFT_REACHED** — уведомление за несколько дней до окончания доступа пользователя, по умолчанию за 3 дня.
 
-  ``` 
+  ```bash
   NOTIFY_IF_DAYS_LEFT_REACHED=True 
   ```
 
 - **NOTIFY_DAYS_LEFT** — определяет количество дней до окончания, за которые будет отправлено уведомление.
 
-  ``` 
+  ```bash
   NOTIFY_DAYS_LEFT=3,7 
   ```
 
 - **NOTIFY_REACHED_USAGE_PERCENT** — задаёт процент трафика, при котором будет отправлено уведомление.
 
-  ``` 
+  ```bash
   NOTIFY_REACHED_USAGE_PERCENT=80,90 
   ```
 
