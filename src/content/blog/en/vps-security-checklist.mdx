@@ -296,77 +296,108 @@ The configuration we specified will block IP addresses after 3 failed login atte
 
 You can adjust the parameters to suit your needs.
 
-## 🔄 Changing the Default Port for SSH Connections in Ubuntu and Debian
 
-By default, the SSH server accepts incoming connections on **TCP port 22**. This port is well-known, so many attackers specifically target it, trying to brute-force passwords. Changing the default port for SSH reduces the risk of such attacks, making your server less visible to automated scanners.
+## 🔄 Changing the Default SSH Port on Ubuntu and Debian
 
-### How to Change the SSH Port
+By default, the SSH server listens for incoming connections on **TCP port 22**. This port is well-known, and attackers often target it with brute-force attempts. Changing the port reduces the risk of such attacks, making your server less visible to automated scanners.
 
-1. **Connect to the server.** Open a connection to the server using an SSH client, such as PuTTY (on Windows) or built-in SSH commands (on macOS and Linux).
+### 📌 How to Change the SSH Port
 
-2. **Install net-tools.** Ensure that the `net-tools` utilities are installed on your server so you can check open ports. Install them using the command:
+1. **Connect to the Server**  
+   Connect to your server via SSH, using, for example, PuTTY (on Windows) or standard SSH commands on macOS and Linux.
+
+2. **Install Required Utilities**  
+   Ensure that `net-tools` is installed on your server to check available ports:
 
    ```bash
    sudo apt install net-tools
    ```
 
-3. **Check occupied ports.** See which ports are already used on the server to choose an unused port for SSH:
+3. **Check Open Ports**  
+   Identify which ports are currently in use on the server to select a free one for SSH:
 
    ```bash
-   sudo netstat -tupln | grep LISTEN
+   sudo ss -tuln | grep LISTEN
    ```
 
-   This command will display a list of active ports and help you choose a free port.
-
-4. **Change the port in the SSH configuration.** Open the `sshd_config` configuration file, where the port for SSH is specified:
+4. **Change the Port in the SSH Configuration**  
+   For most versions of Ubuntu and Debian, open the `sshd_config` file and make the necessary changes:
 
    ```bash
    sudo nano /etc/ssh/sshd_config
    ```
 
-5. **Find the line with the port.** Find the line where it says `#Port 22`. Uncomment it by removing the `#` symbol and replace `22` with your chosen port number. For example, you can use port `2222` or any other free port:
+   Locate the line `#Port 22`, remove `#`, and replace `22` with your chosen port, for example:
 
-   ```plaintext
+   ```bash
    Port 2222
    ```
 
-6. **Save changes.** After editing, save the file by pressing `CTRL + O`, then confirm saving by pressing **Enter**, and exit the editor by pressing `CTRL + X`.
+   Save the file and restart SSH:
 
-7. **Configure the firewall.** Ensure that the new SSH port is open in the firewall (if using UFW):
+   ```bash
+   sudo systemctl restart ssh
+   ```
+
+5. **Adjust Firewall Settings**  
+   Ensure that the new port is open in your firewall (if using UFW):
 
    ```bash
    sudo ufw allow 2222/tcp
    ```
 
-8. **Restart SSH to apply changes.** Restart the SSH server for the new settings to take effect:
+   If you are using `iptables`, add a rule for the new port:
 
    ```bash
-   sudo service ssh restart
+   sudo iptables -I INPUT -p tcp --dport 2222 -j ACCEPT
    ```
 
-Now the SSH server will operate on the new port.
+6. **Test the Connection**  
+   Now the SSH server will accept connections on the new port. Connect using the new port to verify access, and finalize the setup.
 
-### Additional Configuration for Ubuntu 24.04
+---
 
-In Ubuntu 24.04, changing the SSH port requires an additional step. In this distribution, some SSH settings are stored in a separate configuration file, which can override changes made in the main `sshd_config` file. Therefore, you need to change the port also in the `50-cloud-init.conf` file:
+### Additional Steps for Ubuntu 24.04
 
-1. **Edit the `50-cloud-init.conf` file.** Open the configuration file:
+On Ubuntu 24.04, changing the port requires modifications in two locations: the main `sshd_config` file and the SSH socket configuration file.
+
+1. **Change the Port in `sshd_config`**  
+   Open the main configuration file:
 
    ```bash
-   sudo nano /etc/ssh/sshd_config.d/50-cloud-init.conf
+   sudo nano /etc/ssh/sshd_config
    ```
 
-2. **Change the port.** Find the line with `#Port 22`, uncomment it, and specify the same new port as in the main file:
+   Locate the line `#Port 22`, remove `#`, and specify the new port, for example:
 
    ```plaintext
    Port 2222
    ```
 
-3. **Save and restart.** Save the file (`CTRL + O` and **Enter**) and exit (`CTRL + X`). After that, restart the SSH server again:
+2. **Change the Port in the Socket Configuration**  
+   Open the SSH socket configuration file:
 
    ```bash
+   sudo nano /lib/systemd/system/ssh.socket
+   ```
+
+   Find the `ListenStream=22` parameter and replace it with your new port:
+
+   ```plaintext
+   ListenStream=2222
+   ```
+
+3. **Save and Restart**  
+   Save your changes and reload the configuration:
+
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl restart ssh.socket
    sudo systemctl restart ssh
    ```
+
+> For Ubuntu 24.04, remember to configure the firewall as well!
+
 
 ### Connecting to the Server via the New Port
 
