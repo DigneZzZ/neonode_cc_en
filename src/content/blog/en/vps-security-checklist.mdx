@@ -394,69 +394,127 @@ After running the script, you will be prompted to enter the new port, and the sc
 
 Using **Uncomplicated Firewall (UFW)** is a convenient way to set up server protection. UFW is a front-end for `iptables` that greatly simplifies firewall rule management.
 
-## Installing and Basic Configuration of UFW
+## 🔥 Essential UFW Commands and Configuration for Server Security
 
-1. **Installing UFW**. Let's start by installing UFW if it is not already installed:
+Uncomplicated Firewall (UFW) is a convenient tool for managing firewall rules on Ubuntu and Debian. It allows you to easily configure and control access to your server, providing a robust defense against unauthorized access. Here are the main commands and explanations for working with UFW.
 
-   ```bash
-   sudo apt install ufw
-   ```
+### Installing UFW
 
-2. **Setting default rules**. First, set the base rules for access management. By default, UFW will block all incoming connections and allow all outgoing. This means the server can initiate connections to the outside world, but external connections to the server will be blocked.
-
-   ```bash
-   sudo ufw default deny incoming
-   sudo ufw default allow outgoing
-   ```
-
-   These commands help prevent unauthorized access, leaving only the ports you open yourself accessible.
-
-## Allowing SSH Connections
-
-Since SSH is the main way of remote access, you need to allow connections on the SSH port to avoid losing the ability to connect to the server. Use the following command, substituting `PORT` with the SSH port you configured (by default, it's `22`):
+If UFW is not yet installed, you can set it up with the following command:
 
 ```bash
-sudo ufw allow PORT
+sudo apt install ufw
 ```
 
-> **Example**: If you changed the SSH port to `2222`, use `sudo ufw allow 2222`.
+### Enabling and Disabling UFW
 
-Similarly, you can allow access to other important services, such as web servers (ports `80` for HTTP and `443` for HTTPS):
-
-```bash
-sudo ufw allow 80
-sudo ufw allow 443
-```
-
-## Enabling UFW
-
-After configuring the rules, enable UFW so the firewall starts protecting the server. To do this, run the command:
+Before enabling UFW, it’s essential to set up access rules, especially if your server is accessed via SSH. You can enable UFW with the command:
 
 ```bash
 sudo ufw enable
 ```
 
-After activation, UFW will display confirmation that the firewall is enabled and running.
-
-## Restarting Fail2ban
-
-If you are using **Fail2ban** to protect against brute-force attacks, it is recommended to restart Fail2ban after enabling UFW so it works correctly with the new firewall rules:
+To temporarily disable UFW (e.g., for testing purposes), use:
 
 ```bash
-sudo systemctl restart fail2ban
+sudo ufw disable
 ```
 
-## Checking Status and Additional Settings
+> **Warning**: Disabling UFW temporarily removes all restrictions, so proceed with caution.
 
-To check the current UFW rules, you can use the following command:
+### Checking UFW Status and Rules
+
+To check the status of UFW and view all active rules, use:
 
 ```bash
 sudo ufw status verbose
 ```
 
-This command will show a list of active rules and the current firewall status.
+This command will display which ports are allowed or denied, along with other configurations.
 
-> **Additionally**: More detailed documentation on UFW can be found on the [DigitalOcean website](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu-22-04).
+### Setting Default Rules
+
+UFW allows setting default rules for incoming and outgoing traffic. It is recommended to deny all incoming connections (except those you explicitly allow) and to allow all outgoing connections:
+
+```bash
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+```
+
+### Allowing and Denying Ports
+
+To open a port for a specific service, such as SSH, you can use:
+
+```bash
+sudo ufw allow 22/tcp
+```
+
+> **Note**: If you have changed the SSH port, replace `22` with the desired port number. For example, `sudo ufw allow 2222/tcp`.
+
+For a web server, you might need the following commands to allow HTTP and HTTPS:
+
+```bash
+sudo ufw allow 80/tcp     # Open port for HTTP
+sudo ufw allow 443/tcp    # Open port for HTTPS
+```
+
+To block access to a port, use:
+
+```bash
+sudo ufw deny 25/tcp
+```
+
+This, for instance, blocks port `25`, commonly used for mail services (SMTP).
+
+### Allowing Access by IP Address
+
+Sometimes, it’s necessary to allow server access only from a specific IP address. For this, use:
+
+```bash
+sudo ufw allow from 192.168.1.100
+```
+
+This allows access from IP `192.168.1.100` to all services. You can also specify a specific port by adding `to any port 22`:
+
+```bash
+sudo ufw allow from 192.168.1.100 to any port 22
+```
+
+### Deleting Rules
+
+To remove a previously set rule, use the same command with the `delete` flag. For example, to remove access to port 22:
+
+```bash
+sudo ufw delete allow 22/tcp
+```
+
+### Limiting Connections
+
+To prevent brute-force attacks on specific services, UFW allows you to limit connection attempts. For example, to limit SSH connections, use:
+
+```bash
+sudo ufw limit 22/tcp
+```
+
+This command allows up to 6 connection attempts in 30 seconds from a single IP. If the limit is exceeded, the IP is temporarily blocked.
+
+### Reloading UFW
+
+If you want to restart UFW and apply all new rules, use:
+
+```bash
+sudo ufw reload
+```
+
+### Resetting UFW Settings
+
+If you need to reset all UFW settings and start fresh, run:
+
+```bash
+sudo ufw reset
+```
+
+> **Important**: This command removes all current rules, so use it with caution.
 
 Now UFW is configured and active, blocking all unnecessary incoming connections and opening only the necessary ports.
 
