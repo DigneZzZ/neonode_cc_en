@@ -8,7 +8,7 @@ import {
 	getSupportedLanguages,
 	type SupportedLanguage,
 } from "@/utils";
-
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 export const getStaticPaths = (async () => {
 	const allProjects = await getCollection("project", ({ data }) => {
 		return import.meta.env.PROD ? data.draft !== true : true;
@@ -35,5 +35,6 @@ const { Content } = await project.render();
 ---
 
 <ProjectLayout project={project as CollectionEntry<"project">}>
+	<LanguageSwitcher />
 	<Content />
 </ProjectLayout>
