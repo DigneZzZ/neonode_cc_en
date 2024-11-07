@@ -4,6 +4,8 @@ description: Узнайте, как отключить функцию Encrypted 
 tags:
   - Cloudflare
   - ECH
+  - TLS 1.3
+  - РКН
   - блокировка
   - безопасность
 series: CloudflareGuide
