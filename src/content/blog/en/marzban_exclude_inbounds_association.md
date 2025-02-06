@@ -8,8 +8,7 @@ tags:
   - Inbound
 series: "MarzbanGuide"
 draft: false
-pubDate: 07 02 2025
-email: "dignezzz@gmail.com"
+pubDate: 02 07 2025
 ---
 
 # How to Manage User Access to Inbounds? 🤔
