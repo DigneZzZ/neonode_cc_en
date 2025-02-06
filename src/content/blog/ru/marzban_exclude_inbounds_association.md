@@ -9,7 +9,6 @@ tags:
 series: "MarzbanGuide"
 draft: false
 pubDate: 02 07 2025
-email: "dignezzz@gmail.com"
 ---
 
 # Как управлять доступом пользователей к inbound'ам? 🤔
