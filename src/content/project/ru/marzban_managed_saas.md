@@ -3,7 +3,7 @@ title: 'Marzban Managed SaaS'
 description: 'Управляемый сервис для панелей Marzban — запускайте и масштабируйте свой VPN-бизнес без технических заморочек. Мы берем на себя настройку, обслуживание и безопасность.'
 pubDate: '03 03 2025'
 heroImage:
-    url: '/marzban-managed-saas.jpg'
+    url: '/images/marzban-managed-saas.jpg'
     alt: 'Marzban Managed SaaS'
 platform: Web
 website: https://openode.xyz/msaas/
