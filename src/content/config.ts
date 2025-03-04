@@ -63,7 +63,7 @@ const project = defineCollection({
 		github: z.string().optional(),
 		draft: z.boolean().optional().default(false),
 		// for pinning projects
-		order: z.number().min(1).max(5).optional()
+		order: z.number().min(1).max(5).optional(),
 		// Добавляем новые поля
 		tgChannel: z.string().optional(),
 		tgGroup: z.string().optional(),
