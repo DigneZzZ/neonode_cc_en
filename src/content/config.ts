@@ -64,6 +64,9 @@ const project = defineCollection({
 		draft: z.boolean().optional().default(false),
 		// for pinning projects
 		order: z.number().min(1).max(5).optional()
+		// Добавляем новые поля
+		tgChannel: z.string().optional(),
+		tgGroup: z.string().optional(),
 	})
 });
 
