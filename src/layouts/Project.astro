@@ -24,6 +24,8 @@ const {
 		stack,
 		website,
 		github,
+		tgChannel,
+		tgGroup
 	},
 } = project;
 const { headings } = project.render && (await project.render());
@@ -90,6 +92,26 @@ const articleDate = pubDate.toISOString();
 						<small>GITHUB</small>
 						<a href={github} target="_blank" class="cody-link">
 							{github}
+						</a>
+					</li>
+				)
+			}
+			{
+				tgChannel && (
+					<li class="project-frontmatter-item">
+						<small>TELEGRAM CHANNEL</small>
+						<a href={tgChannel} target="_blank" class="cody-link">
+							{tgChannel}
+						</a>
+					</li>
+				)
+			}
+			{
+				tgGroup && (
+					<li class="project-frontmatter-item">
+						<small>TELEGRAM GROUP</small>
+						<a href={tgGroup} target="_blank" class="cody-link">
+							{tgGroup}
 						</a>
 					</li>
 				)
