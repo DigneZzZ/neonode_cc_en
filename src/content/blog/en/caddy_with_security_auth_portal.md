@@ -7,7 +7,7 @@ tags:
   - security
   - xcaddy
 series: caddy
-pubDate: 10 12 2024
+pubDate: 04 09 2025
 ---
 
 # How to Create an Authentication Portal for Your Domains with Caddy
