@@ -10,9 +10,6 @@ tags:
 series: UbuntuServerGuide
 draft: false
 pubDate: 04 17 2025
-heroImage:
-    url: '/blog-placeholder-about.jpg'
-    alt: 'GitHub wallpaper'
 ---
 
 # Полезные твики и утилиты для Ubuntu Server
@@ -41,11 +38,6 @@ alias bigfiles='find / -type f -size +100M 2>/dev/null'
 4. **Просмотр логов в реальном времени:**
 ```bash
 alias logs='journalctl -xe -f'
-```
-
-5. **Перегенерация GRUB:**
-```bash
-alias update-grub2='grub-mkconfig -o /boot/grub/grub.cfg'
 ```
 
 ---
@@ -126,6 +118,9 @@ apt install -y duf
 apt install -y restic
 ```
 Создание бэкапа: `restic -r /backup init` и далее `restic -r /backup backup /etc`
+
+Но честно говоря, я им не пользуюсь. Нашел его как современную альтернативу.
+Читайте детальнее и разбирайтесь :)
 
 ---
 
