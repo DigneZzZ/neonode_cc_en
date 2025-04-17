@@ -10,6 +10,9 @@ tags:
 series: UbuntuServerGuide
 draft: false
 pubDate: 04 17 2025
+heroImage:
+    url: '/blog-placeholder-about.jpg'
+    alt: 'GitHub wallpaper'
 ---
 
 # Полезные твики и утилиты для Ubuntu Server
