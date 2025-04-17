@@ -80,11 +80,11 @@ apt install -y bat
 
 
 
-- `exa` — улучшенный `ls`, с цветами и древовидным выводом:
+- `eza` — улучшенный `ls`, с цветами и древовидным выводом:
 ```bash
-apt install -y exa
+apt install -y eza
 ```
-Используй: `exa -lh --tree`
+Используй: `eza -lh --tree`
 
 - `fd` — альтернатива `find`, проще и быстрее:
 ```bash
