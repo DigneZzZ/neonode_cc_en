@@ -9,7 +9,7 @@ tags:
   - оптимизация
 series: UbuntuServerGuide
 draft: false
-pubDate: 17 04 2025
+pubDate: 04 17 2025
 ---
 
 # Полезные твики и утилиты для Ubuntu Server
@@ -76,7 +76,14 @@ apt install -y tldr
 ```bash
 apt install -y bat
 ```
-Используй: `bat filename`
+Используй: `batcat filename`
+Но можно назначить алиас для короткой команды: `alias bat='batcat'`
+
+Потом обнови сессию: `source ~/.bashrc`
+
+А потом используй `bat file.cfg` для чтения
+
+
 
 - `exa` — улучшенный `ls`, с цветами и древовидным выводом:
 ```bash
