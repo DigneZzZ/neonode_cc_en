@@ -72,11 +72,11 @@ apt install -y bat
 ```
 Use: `batcat filename` (or alias `bat='batcat'`)
 
-- `exa` — a modern `ls` with colors and tree view:
+- `eza` — a modern `ls` with colors and tree view:
 ```bash
-apt install -y exa
+apt install -y eza
 ```
-Use: `exa -lh --tree`
+Use: `eza -lh --tree`
 
 - `fd` — a simpler, faster alternative to `find`:
 ```bash
