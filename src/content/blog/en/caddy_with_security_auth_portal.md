@@ -242,7 +242,7 @@ sudo nano /etc/caddy/Caddyfile
 
 Add global settings at the top:
 
-```
+```json
 {
 	storage file_system {
 		root /var/lib/caddy
@@ -298,7 +298,7 @@ Add global settings at the top:
 
 Add a block for your domain:
 
-```
+```json
 sub.example.com {
 	route {
 		handle /auth {
@@ -388,7 +388,7 @@ If access fails, check:
 
 For different domains, create separate portals:
 
-```
+```json
 authentication portal another_portal {
 	cookie domain .anotherdomain.com
 	...
@@ -399,7 +399,7 @@ authentication portal another_portal {
 
 Enable debug logs:
 
-```
+```json
 {
 	log {
 		output file /var/log/caddy/caddy.log
