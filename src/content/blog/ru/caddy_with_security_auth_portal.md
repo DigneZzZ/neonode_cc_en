@@ -242,7 +242,7 @@ sudo nano /etc/caddy/Caddyfile
 
 Добавьте глобальные настройки в начало файла:
 
-```caddy
+```
 {
 	storage file_system {
 		root /var/lib/caddy
@@ -298,7 +298,7 @@ sudo nano /etc/caddy/Caddyfile
 
 Добавьте блок для вашего домена:
 
-```caddy
+```
 sub.example.com {
 	route {
 		handle /auth {
@@ -356,13 +356,13 @@ caddy validate --config /etc/caddy/Caddyfile
 
 Примените изменения:
 
-```bash
+```shell
 sudo systemctl restart caddy
 ```
 
 Проверьте статус:
 
-```bash
+```shell
 systemctl status caddy
 ```
 
@@ -388,7 +388,7 @@ systemctl status caddy
 
 Для разных доменов создайте отдельные порталы:
 
-```caddy
+```
 authentication portal another_portal {
 	cookie domain .anotherdomain.com
 	...
@@ -399,7 +399,7 @@ authentication portal another_portal {
 
 Добавьте отладочные логи:
 
-```caddy
+```
 {
 	log {
 		output file /var/log/caddy/caddy.log
