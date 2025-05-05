@@ -238,6 +238,50 @@ I intentionally left out the full Remnawave setup to focus on **using CF Tunnel*
 
 ---
 
+## 🔐 Securing the Remnawave Panel with Cloudflare Access
+
+If you want to add an extra layer of authentication to your Remnawave panel or subscription page — without using nginx or custom login systems — you can use **Cloudflare Access**, part of Cloudflare Zero Trust.
+
+### What Cloudflare Access offers:
+
+* Restrict access to authorized users (Google, GitHub, email, etc.)
+* Multi-factor authentication (MFA)
+* Access policies by email, IP, group, country, and more
+* Audit logs and login tracking
+* Filters requests **before** they reach your server
+
+---
+
+### How to Enable Authentication with Cloudflare Access
+
+1. **Go to the Cloudflare Zero Trust Dashboard**:
+   [https://one.cloudflare.com](https://one.cloudflare.com)
+
+2. Navigate to **Access > Applications** and click **+ Add an application**.
+
+3. Choose application type: **Self-hosted**.
+
+4. Fill in the following fields:
+
+   * **Application Name**: `Remnawave Panel`
+   * **Subdomain**: `panel.example.com`
+   * **Session duration**: e.g., 8 hours
+
+5. Create an access policy:
+
+   * **Rule name**: `Allow company users`
+   * **Include** → Emails ending with `@example.com` *(or any filter you prefer)*
+
+6. Save and activate the application.
+
+Now, any request to `https://panel.example.com` will first be validated by Cloudflare Access — only authenticated users will reach your tunnel and Docker container.
+
+---
+
+💡 **Note**: To use Cloudflare Access, your domain must be using **Cloudflare Nameservers** and be active in your Cloudflare dashboard.
+
+---
+
 ## Accessing VPN Panel via HTTPS on a Private Server
 
 Visit my forum [**Openode Club**](https://openode.xyz) for dozens of practical guides on setting up Remnawave, Cloudflare, Docker, Telegram bots, automation, and VPN monetization.
