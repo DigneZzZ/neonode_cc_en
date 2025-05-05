@@ -4,7 +4,7 @@ description: Review of VPSserver – how to claim a $100 VPS bonus, explore chea
 tags:
   - VPS
   - 10gbps VPS
-  - Swedem VPS
+  - Sweden VPS
   - Netherlands VPS
   - Germany VPS
   - VPS hosting
