@@ -14,7 +14,7 @@ tags:
   - ВПН сервер
   - дешевый хостинг
   - Docker VPS
-  - CI/CD
+  - CI CD
   - remote server
   - cloud hosting
   - virtual server
