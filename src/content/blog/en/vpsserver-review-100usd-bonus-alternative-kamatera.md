@@ -28,7 +28,7 @@ VPSserver is an international virtual private server (VPS) provider born from th
 
 * \$100 welcome bonus for new users
 * 20+ data centers in Europe, America, Asia, and Australia
-* Russia-friendly with no mandatory ID verification
+* No mandatory ID verification or geo-blocking for most countries
 * Affordable pricing starting at \$3.99/month
 * Full root access and flexible configuration
 
