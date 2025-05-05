@@ -1,6 +1,6 @@
 ---
-title: Remnawave и Cloudflare Tunnel с Docker Compose: безопасный доступ к контейнерам без открытых портов
-description: Как настроить Cloudflare Tunnel с помощью Docker Compose и обеспечить защищённый HTTPS-доступ к вашим контейнерам без проброса портов. Разбираем на примере панели Remnawave и страницы подписки.
+title: "Remnawave и Cloudflare Tunnel с Docker Compose: безопасный доступ к контейнерам без открытых портов"
+description: "Как настроить Cloudflare Tunnel с помощью Docker Compose и обеспечить защищённый HTTPS-доступ к вашим контейнерам без проброса портов. Разбираем на примере панели Remnawave и страницы подписки."
 tags:
   - cloudflare
   - remnawave
