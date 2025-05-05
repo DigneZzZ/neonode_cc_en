@@ -10,7 +10,7 @@ tags:
   - VPN hosting
   - proxy server
   - Docker VPS
-  - CI/CD
+  - CI CD
   - remote server
   - cloud hosting
   - virtual server
