@@ -92,7 +92,7 @@ cloudflared tunnel route dns remnawave-tunnel sub.example.com
 ## Step 3. Project Structure
 
 ```yaml
-project/
+/opt/remnawave/
 ├── docker-compose.yml
 ├── .env
 └── cloudflared/
