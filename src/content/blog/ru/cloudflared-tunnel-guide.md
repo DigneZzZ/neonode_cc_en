@@ -1,10 +1,11 @@
 ---
-title: Запуск Cloudflare Tunnel на сервере
-description: Подробное руководство по установке и настройке Cloudflare Tunnel (ранее Argo Tunnel) для защиты вашего сервера.
+title: Cloudflare Tunnel с Docker Compose: безопасный доступ к контейнерам без открытых портов
+description: Как настроить Cloudflare Tunnel с помощью Docker Compose и обеспечить защищённый HTTPS-доступ к вашим контейнерам без проброса портов.
 tags:
   - cloudflare
+  - docker
+  - обратный прокси
   - туннель
-  - сервер
   - безопасность
 series: server-guides
 draft: false
@@ -13,108 +14,111 @@ pubDate: 09 11 2024
 
 ## Введение
 
-Cloudflare Tunnel (ранее Argo Tunnel) — это мощный инструмент для создания безопасного подключения между вашим сервером и Cloudflare, без необходимости открывать публичные порты. В этом руководстве описаны шаги по установке и настройке Cloudflare Tunnel на различных операционных системах.
+Cloudflare Tunnel позволяет надёжно публиковать ваши локальные сервисы в интернете, **не открывая порты** и не обрабатывая HTTPS вручную. В этом гайде вы научитесь настраивать туннель **в связке с Docker Compose**, чтобы автоматически проксировать доступ к нужным контейнерам, как будто это обычный публичный сайт.
 
-## Шаги по настройке
+## Зачем это нужно
 
-### 1. Установка Cloudflare Tunnel (Cloudflared)
+- Нет белого IP — и не надо.
+- Никакого проброса портов на роутере или в фаерволе.
+- Cloudflare даёт HTTPS, WAF, защиту от DDoS и ботов.
+- Всё можно запускать в контейнерах — без лишней настройки nginx, certbot и прочего.
 
-Для начала необходимо установить `cloudflared` на ваш сервер. В зависимости от используемой операционной системы, выполните следующие команды:
+## Пример: публикуем веб-приложение через туннель
 
-**Для Ubuntu/Debian:**
+Допустим, у нас есть контейнер `my-app`, который работает на `http://my-app:3000`. Мы хотим, чтобы он был доступен по `https://app.example.com`.
+
+## Шаг 1. Подготовка Cloudflare
+
+1. Зарегистрируйтесь и добавьте домен в Cloudflare.
+2. Установите `cloudflared` локально и выполните авторизацию:
+
+    ```bash
+    cloudflared login
+    ```
+
+3. Создайте туннель:
+
+    ```bash
+    cloudflared tunnel create my-tunnel
+    ```
+
+4. Привяжите DNS:
+
+    ```bash
+    cloudflared tunnel route dns my-tunnel app.example.com
+    ```
+
+5. Скопируйте `.json`-файл с credentials (обычно находится в `~/.cloudflared/`) в директорию проекта, например, `./cloudflared`.
+
+## Шаг 2. Структура проекта
+
+````
+
+project/
+├── docker-compose.yml
+├── cloudflared/
+│   ├── config.yml
+│   └── <тут ваш tunnel-id>.json
+
+````
+
+## Шаг 3. `config.yml` — конфиг туннеля
+
+```yaml
+tunnel: my-tunnel
+credentials-file: /etc/cloudflared/<тут ваш tunnel-id>.json
+
+ingress:
+  - hostname: app.example.com
+    service: http://my-app:3000
+  - service: http_status:404
+````
+
+## Шаг 4. `docker-compose.yml`
+
+```yaml
+version: '3.8'
+
+services:
+  my-app:
+    image: your-image
+    container_name: my-app
+    expose:
+      - 3000
+    networks:
+      - app-network
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: always
+    command: tunnel --config /etc/cloudflared/config.yml run
+    volumes:
+      - ./cloudflared:/etc/cloudflared
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+```
+
+## Шаг 5. Запуск
 
 ```bash
-wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
-sudo dpkg -i cloudflared-linux-amd64.deb
+docker compose up -d
 ```
 
-**Для CentOS/RHEL:**
-
-```bash
-wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.rpm
-sudo rpm -ivh cloudflared-linux-amd64.rpm
-```
-
-**Для macOS:**
-
-```bash
-brew install cloudflare/cloudflare/cloudflared
-```
-
-### 2. Авторизация в Cloudflare
-
-Для настройки туннеля вам необходимо войти в ваш аккаунт Cloudflare. Выполните следующую команду для авторизации:
-
-```bash
-cloudflared login
-```
-
-Эта команда откроет браузер, где вы сможете войти в ваш аккаунт Cloudflare. После успешной авторизации файл конфигурации с токеном будет создан автоматически.
-
-### 3. Создание туннеля
-
-После авторизации вы можете создать туннель:
-
-```bash
-cloudflared tunnel create <имя_туннеля>
-```
-
-Это создаст уникальный туннель с указанным вами именем. Сохраните идентификатор туннеля — он понадобится вам позже.
-
-### 4. Настройка DNS
-
-Теперь вам нужно настроить DNS-запись для связывания вашего домена с туннелем:
-
-```bash
-cloudflared tunnel route dns <имя_туннеля> example.com
-```
-
-Замените `example.com` на ваш реальный домен.
-
-### 5. Запуск туннеля
-
-После настройки DNS можно запустить туннель командой:
-
-```bash
-cloudflared tunnel run <имя_туннеля>
-```
-
-### 6. Автоматизация запуска туннеля
-
-Чтобы обеспечить автоматический запуск туннеля при старте системы, настройте systemd-сервис.
-
-Создайте файл для systemd:
-
-```bash
-sudo nano /etc/systemd/system/cloudflared.service
-```
-
-Добавьте в файл следующий код:
-
-```ini
-[Unit]
-Description=cloudflared
-After=network.target
-
-[Service]
-Type=simple
-User=root
-ExecStart=/usr/local/bin/cloudflared tunnel run <имя_туннеля>
-Restart=on-failure
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Сохраните файл и закройте редактор.
-
-Активируйте и запустите сервис:
-
-```bash
-sudo systemctl enable cloudflared
-sudo systemctl start cloudflared
-```
+Теперь при переходе на `https://app.example.com` вы попадёте в ваш контейнер `my-app`, **не открывая портов наружу**.
 
 ## Заключение
 
-Теперь ваш Cloudflare Tunnel автоматически запускается при включении сервера, защищая его от внешних угроз. Это отличный способ улучшить безопасность вашего сервера, используя преимущества инфраструктуры Cloudflare.
+Использование Cloudflare Tunnel в связке с Docker Compose позволяет:
+
+* Упростить публикацию сервисов.
+* Убрать необходимость ручной настройки HTTPS.
+* Увеличить безопасность без танцев с `iptables` и nginx.
+
+Всё работает в контейнерах — прозрачно и без магии. Отличный способ проксировать административки, панели или API, которые не хочется выставлять напрямую.
+
+```
