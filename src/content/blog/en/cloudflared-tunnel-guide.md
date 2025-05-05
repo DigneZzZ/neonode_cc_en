@@ -1,10 +1,11 @@
 ---
-title: Running Cloudflare Tunnel on Your Server
-description: A detailed guide on installing and configuring Cloudflare Tunnel (formerly Argo Tunnel) to secure your server.
+title: Cloudflare Tunnel with Docker Compose: Secure Access to Containers Without Open Ports
+description: How to set up Cloudflare Tunnel using Docker Compose and securely expose your containers over HTTPS without port forwarding.
 tags:
   - cloudflare
+  - docker
+  - reverse proxy
   - tunnel
-  - server
   - security
 series: server-guides
 draft: false
@@ -13,108 +14,109 @@ pubDate: 09 11 2024
 
 ## Introduction
 
-Cloudflare Tunnel (formerly Argo Tunnel) is a powerful tool for creating a secure connection between your server and Cloudflare without the need to open public ports. This guide describes the steps to install and configure Cloudflare Tunnel on various operating systems.
+Cloudflare Tunnel lets you securely expose your local services to the internet **without opening ports** or manually handling HTTPS. In this guide, you’ll learn how to configure the tunnel **using Docker Compose** to proxy access to your containers automatically — just like a regular public website.
 
-## Setup Steps
+## Why You Might Need It
 
-### 1. Installing Cloudflare Tunnel (Cloudflared)
+- No public IP? No problem.
+- No port forwarding on your router or firewall.
+- Cloudflare gives you HTTPS, WAF, DDoS and bot protection.
+- Everything runs in containers — no need to manually configure nginx, certbot, or anything else.
 
-First, you need to install `cloudflared` on your server. Depending on the operating system you are using, run the following commands:
+## Example: Exposing a Web App via Tunnel
 
-**For Ubuntu/Debian:**
+Let’s say you have a container `my-app` running at `http://my-app:3000`. You want it to be publicly accessible at `https://app.example.com`.
+
+## Step 1. Prepare Cloudflare
+
+1. Sign up and add your domain to Cloudflare.
+2. Install `cloudflared` locally and authenticate:
+
+    ```bash
+    cloudflared login
+    ```
+
+3. Create a tunnel:
+
+    ```bash
+    cloudflared tunnel create my-tunnel
+    ```
+
+4. Route DNS to the tunnel:
+
+    ```bash
+    cloudflared tunnel route dns my-tunnel app.example.com
+    ```
+
+5. Copy the credentials `.json` file (usually located in `~/.cloudflared/`) to your project directory, e.g., `./cloudflared`.
+
+## Step 2. Project Structure
+
+````
+
+project/
+├── docker-compose.yml
+├── cloudflared/
+│   ├── config.yml
+│   └── <your tunnel-id>.json
+
+````
+
+## Step 3. `config.yml` — Tunnel Configuration
+
+```yaml
+tunnel: my-tunnel
+credentials-file: /etc/cloudflared/<your tunnel-id>.json
+
+ingress:
+  - hostname: app.example.com
+    service: http://my-app:3000
+  - service: http_status:404
+````
+
+## Step 4. `docker-compose.yml`
+
+```yaml
+version: '3.8'
+
+services:
+  my-app:
+    image: your-image
+    container_name: my-app
+    expose:
+      - 3000
+    networks:
+      - app-network
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: always
+    command: tunnel --config /etc/cloudflared/config.yml run
+    volumes:
+      - ./cloudflared:/etc/cloudflared
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+```
+
+## Step 5. Launch It
 
 ```bash
-wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
-sudo dpkg -i cloudflared-linux-amd64.deb
+docker compose up -d
 ```
 
-**For CentOS/RHEL:**
-
-```bash
-wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.rpm
-sudo rpm -ivh cloudflared-linux-amd64.rpm
-```
-
-**For macOS:**
-
-```bash
-brew install cloudflare/cloudflare/cloudflared
-```
-
-### 2. Authorization in Cloudflare
-
-To set up the tunnel, you need to log into your Cloudflare account. Run the following command for authorization:
-
-```bash
-cloudflared login
-```
-
-This command will open a browser window where you can log into your Cloudflare account. After successful authorization, a configuration file with a token will be created automatically.
-
-### 3. Creating the Tunnel
-
-After authorization, you can create the tunnel:
-
-```bash
-cloudflared tunnel create <tunnel_name>
-```
-
-This will create a unique tunnel with the name you specify. Save the tunnel ID — you'll need it later.
-
-### 4. Configuring DNS
-
-Now you need to set up a DNS record to link your domain with the tunnel:
-
-```bash
-cloudflared tunnel route dns <tunnel_name> example.com
-```
-
-Replace `example.com` with your actual domain.
-
-### 5. Running the Tunnel
-
-After configuring DNS, you can start the tunnel with the following command:
-
-```bash
-cloudflared tunnel run <tunnel_name>
-```
-
-### 6. Automating Tunnel Startup
-
-To ensure the tunnel starts automatically when the system boots, configure a systemd service.
-
-Create a file for systemd:
-
-```bash
-sudo nano /etc/systemd/system/cloudflared.service
-```
-
-Add the following code to the file:
-
-```ini
-[Unit]
-Description=cloudflared
-After=network.target
-
-[Service]
-Type=simple
-User=root
-ExecStart=/usr/local/bin/cloudflared tunnel run <tunnel_name>
-Restart=on-failure
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Save the file and close the editor.
-
-Enable and start the service:
-
-```bash
-sudo systemctl enable cloudflared
-sudo systemctl start cloudflared
-```
+Now, when you visit `https://app.example.com`, you’ll be routed directly into your `my-app` container — **without opening any ports to the outside world**.
 
 ## Conclusion
 
-Now your Cloudflare Tunnel starts automatically when the server boots, protecting it from external threats. This is a great way to enhance your server's security by leveraging Cloudflare's infrastructure.
+Using Cloudflare Tunnel with Docker Compose allows you to:
+
+* Simplify service exposure.
+* Eliminate the need to set up HTTPS manually.
+* Improve security without messing with `iptables` or nginx.
+
+It all runs in containers — clean, transparent, and without magic. A great way to proxy admin panels, dashboards, or APIs you’d rather not expose directly.
