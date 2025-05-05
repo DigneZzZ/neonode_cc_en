@@ -1,6 +1,6 @@
 ---
-title: Cloudflare Tunnel с Docker Compose: безопасный доступ к контейнерам без открытых портов
-description: Как настроить Cloudflare Tunnel с помощью Docker Compose и обеспечить защищённый HTTPS-доступ к вашим контейнерам без проброса портов.
+title: "Cloudflare Tunnel с Docker Compose: безопасный доступ к контейнерам без открытых портов"
+description: "Как настроить Cloudflare Tunnel с помощью Docker Compose и обеспечить защищённый HTTPS-доступ к вашим контейнерам без проброса портов."
 pubDate: 09 11 2024
 tags:
   - cloudflare
