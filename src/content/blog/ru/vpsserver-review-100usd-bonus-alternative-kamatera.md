@@ -2,7 +2,6 @@
 title: "VPSserver — Лучший VPS сервер с бонусом 100$ | Kamatera альтернатива"
 description: "Подробный обзор провайдера VPSserver — как получить VPS с бонусом 100$, дешёвые тарифы и лучшие локации для VPN, прокси и CI/CD."
 tags:
-tags:
   - VPS
   - VPS hosting
   - cheap VPS
