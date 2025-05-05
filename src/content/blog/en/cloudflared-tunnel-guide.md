@@ -1,6 +1,7 @@
 ---
 title: "Cloudflare Tunnel with Docker Compose: Secure Access to Containers Without Open Ports"
 description: "How to set up Cloudflare Tunnel using Docker Compose and securely expose your containers over HTTPS without port forwarding."
+pubDate: 09 11 2024
 tags:
   - cloudflare
   - docker
@@ -9,7 +10,6 @@ tags:
   - security
 series: server-guides
 draft: false
-pubDate: 09 11 2024
 ---
 
 ## Introduction
