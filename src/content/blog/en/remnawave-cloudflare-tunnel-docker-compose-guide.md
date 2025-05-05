@@ -306,3 +306,21 @@ Whether you’re building a **VPN business**, testing in a home lab, or deployin
 
 👉 Looking for full Remnawave installation scripts and VPN automation? Join the [Openode Club](https://openode.xyz) and get access to premium guides and tools.
 
+---
+
+## Get a VPS for \$10 + \$100 Credit — Kamatera Alternative
+
+Looking for a **cheap VPS for VPN**, proxies, CI/CD or Docker hosting?
+Try **VPSserver** — a rebranded Kamatera provider offering **\$100 in free credit** for just a **\$10 top-up**.
+
+🌐 20+ global data centers: USA, Germany, Netherlands, UK, France, Japan, and more
+🛡️ No ID verification, **Russia-friendly**, ideal for **VPN servers**, **Docker panels**, **cloud labs**, and **test environments**
+
+🎯 Perfect for:
+
+* Cloudflare Tunnel setups
+* Marzban, SHM, or Remnawave deployment
+* Lightweight or burstable workloads
+
+👉 **[Claim your \$100 VPS credit](https://go.cloudwm.com/visit/?bta=36601&brand=vpsserver)** — before it gets blocked
+
