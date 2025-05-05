@@ -74,8 +74,6 @@ cloudflared login
 cloudflared tunnel create remnawave-tunnel
 ```
 
-Copy the JSON file from `~/.cloudflared/remnawave-tunnel.json` into your project directory (e.g., `./cloudflared/`).
-
 ---
 
 ## Step 2. Configure DNS
@@ -86,10 +84,15 @@ Create DNS routes for your subdomains:
 cloudflared tunnel route dns remnawave-tunnel panel.example.com
 cloudflared tunnel route dns remnawave-tunnel sub.example.com
 ```
+This command registers the panel.example.com subdomain in the Cloudflare zone and binds it to the remnawave-tunnel.
+
+It is independent of where you have `remnawave-tunnel.json` lying around. This command works through your authorized `cloudflared`, and the settings go directly to your Cloudflare account via the API.
 
 ---
 
 ## Step 3. Project Structure
+
+After creating the tunnel and configuring DNS routes, copy the JSON file from `~/.cloudflared/remnawave-tunnel.json` to the project directory `/opt/remnawave/cloudflared/`.
 
 ```yaml
 /opt/remnawave/
