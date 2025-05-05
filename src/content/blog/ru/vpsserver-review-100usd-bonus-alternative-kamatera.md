@@ -4,7 +4,13 @@ description: "Подробный обзор провайдера VPSserver — �
 tags:
   - VPS
   - VPS hosting
-  - cheap VPS
+  - 10gbps VPS
+  - быстрый VPS
+  - Sweden VPS
+  - Швеция VPS
+  - Netherlands VPS
+  - Germany VPS
+  - дешевый VPS
   - Kamatera
   - Kamatera alternative
   - VPN hosting
