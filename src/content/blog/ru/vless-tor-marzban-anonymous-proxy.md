@@ -145,7 +145,7 @@ Congratulations. This browser is configured to use Tor.
 
 ```bash
 docker ps
-docker exec -it marzban-backend bash
+docker exec -it marzban bash
 xray x25519
 exit
 ```
@@ -153,7 +153,7 @@ exit
 Альтернатива:
 
 ```bash
-docker exec marzban-backend xray x25519
+docker exec marzban xray x25519
 ```
 
 ---
@@ -161,8 +161,6 @@ docker exec marzban-backend xray x25519
 ## 🔁 Генерация shortId
 
 ```bash
-head /dev/urandom | tr -dc 'a-f0-9' | head -c 16
-# или
 openssl rand -hex 8
 ```
 
