@@ -21,11 +21,11 @@ In this guide, we’ll create an anonymous proxy server using **Marzban**, **XRa
 
 ```bash
 
-+----------+        +--------+--------+
-| *ray     |        | *ray   | Tor    |
-| Client   +------->+ Server + Client +------> TOR
-|          |        |        |        |
-+----------+        +--------+--------+
++------------+          +------------+------------+
+|   *ray     |          |   *ray     |   Tor      |
+|  Client    +--------->+  Server    +  Client    +-------> TOR
+|            |          |            |            |
++------------+          +------------+------------+
 
 ```
 
