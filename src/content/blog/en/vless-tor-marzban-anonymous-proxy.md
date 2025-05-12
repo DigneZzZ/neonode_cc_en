@@ -1,4 +1,3 @@
-
 ---
 title: "Anonymous VLESS+TCP+REALITY via TOR in Marzban: Proxy Server Setup with SOCKS5"
 description: "A detailed guide to setting up an anonymous proxy server using Marzban, XRay, and TOR with VLESS+REALITY and routing through SOCKS5 to access .onion resources and hide your IP address."
