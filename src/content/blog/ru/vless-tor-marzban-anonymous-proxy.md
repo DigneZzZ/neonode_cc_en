@@ -1,6 +1,6 @@
 ---
-title: Анонимный VLESS+TCP+REALITY через TOR в Marzban: настройка прокси-сервера с SOCKS5
-description: Подробное руководство по настройке анонимного прокси-сервера на базе Marzban, XRay и TOR с использованием VLESS+REALITY и маршрутизации через SOCKS5 для доступа к .onion-ресурсам и сокрытия IP-адреса.
+title: "Анонимный VLESS+TCP+REALITY через TOR в Marzban: настройка прокси-сервера с SOCKS5"
+description: "Подробное руководство по настройке анонимного прокси-сервера на базе Marzban, XRay и TOR с использованием VLESS+REALITY и маршрутизации через SOCKS5 для доступа к .onion-ресурсам и сокрытия IP-адреса."
 tags:
   - vless
   - tor
