@@ -16,7 +16,7 @@ draft: false
 pubDate: 05 21 2025
 ---
 
-# Setting Up WireGuard with Wgcf Without warp-cli
+# Setting up Warp Routing via WireGuard (Wgcf) without warp-cli
 
 Hello everyone!
 
