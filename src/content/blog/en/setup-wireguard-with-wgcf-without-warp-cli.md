@@ -1,10 +1,11 @@
 ---
-title: Setting Up WireGuard with Wgcf Without warp-cli
-description: A detailed guide on configuring WireGuard using Wgcf instead of warp-cli. Suitable for VPS, nodes, proxies, and traffic routing through Cloudflare WARP.
+title: Setting up Warp Routing via WireGuard (Wgcf) on Xray-core
+description: A detailed guide on configuring Warp routing through a WireGuard connection using Wgcf instead of warp-cli. Suitable for VPS, nodes, proxies, and routing traffic through Cloudflare WARP.
 tags:
   - wireguard
   - cloudflare
   - remnawave
+  - warp
   - marzban
   - remnanode
   - wgcf
