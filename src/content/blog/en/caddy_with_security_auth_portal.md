@@ -1,5 +1,20 @@
 ---
 title: How to Create an Authentication Portal for Your Domains with Caddy
+description: A detailed guide on building Caddy with the caddy-security module using xcaddy and setting up an authentication portal with local authentication and OAuth providers to secure your domains.
+tags:
+  - Caddy
+  - authentication
+  - security
+  - xcaddy
+  - OAuth
+  - Google
+series: caddy
+pubDate: 04 09 2025
+---
+
+# How to Create an Authentication Portal for Your Domains with Caddy
+
+Caddy is a modern web server that automatically provides HTTPS via Let's Encrypt. However, the standard Caddy build does not include the `caddy-security` module, which is required to create an authentication portal and manage access to your domains. In this article, I'll walk you through building Caddy with this module using `xcaddy`, configuring an authentication portal with local authentication and OAuth providers (Google), and securing your web applications. to Create an Authentication Portal for Your Domains with Caddy
 description: A detailed guide on building Caddy with the caddy-security module using xcaddy and setting up an authentication portal to secure your domains.
 tags:
   - Caddy
@@ -382,7 +397,189 @@ If access fails, check:
 
 ---
 
+## Step 6: Advanced Configuration - OAuth Authentication
+
+In addition to local authentication, Caddy Security supports OAuth providers such as Google. This allows users to sign in using their existing Google accounts.
+
+### 6.1. Setting Up Google Cloud Platform
+
+To integrate with Google OAuth, you need to configure a project in Google Cloud Platform:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Navigate to "APIs & Services" → "Credentials"
+4. Click "Configure Consent Screen"
+   - Choose user type: "External"
+   - Fill in required fields: application name, developer email
+   - In "Scopes" section add: `openid`, `email`, `profile`
+5. Create OAuth 2.0 Client ID:
+   - Application type: "Web application"
+   - Add authorized redirect URIs:
+     ```
+     https://auth.example.com/oauth2/google/authorization-code-callback
+     https://auth.example.com/auth/oauth2/google/authorization-code-callback
+     ```
+6. Save the Client ID and Client Secret
+
+### 6.2. Updating Caddy Configuration
+
+Update your Caddyfile to support Google OAuth:
+
+```json
+{
+    storage file_system {
+        root /var/lib/caddy
+    }
+    email your-email@example.com
+    order authenticate before respond
+    order authorize before respond
+
+    security {
+        local identity store localdb {
+            realm local
+            path /data/.local/caddy/users.json
+        }
+
+        oauth identity provider google {
+            realm google
+            driver google
+            client_id {env.GOOGLE_CLIENT_ID}.apps.googleusercontent.com
+            client_secret {env.GOOGLE_CLIENT_SECRET}
+            scopes openid email profile
+        }
+
+        authentication portal my_portal {
+            crypto default token lifetime 3600
+            crypto key sign-verify {env.JWT_SHARED_KEY}
+            enable identity store localdb
+            enable identity provider google
+            cookie domain .example.com
+            ui {
+                links {
+                    "Dashboard" "/dashboard" icon "las la-tachometer-alt"
+                    "My Identity" "/auth/whoami" icon "las la-user"
+                    "Portal Settings" "/settings" icon "las la-cog"
+                }
+            }
+            transform user {
+                match origin local
+                action add role authp/user
+                ui link "Portal Settings" /settings icon "las la-cog"
+            }
+            transform user {
+                match origin local
+                match email admin@example.com
+                action add role authp/admin
+            }
+            transform user {
+                match realm google
+                action add role authp/user
+            }
+            transform user {
+                match realm google
+                match email admin@example.com
+                action add role authp/admin
+            }
+        }
+
+        authorization policy my_policy {
+            set auth url /auth
+            crypto key verify {env.JWT_SHARED_KEY}
+            allow roles authp/admin authp/user
+            validate bearer header
+            inject headers with claims
+            acl rule {
+                comment "Allow authenticated users"
+                match role authp/admin authp/user
+                allow stop log info
+            }
+            acl rule {
+                comment "Deny all others"
+                match any
+                deny log warn
+            }
+        }
+    }
+}
+```
+
+### 6.3. Environment Variables Configuration
+
+Create `/etc/caddy/env.conf` file with necessary variables:
+
+```bash
+# JWT key for token signing (minimum 100 characters)
+JWT_SHARED_KEY=your-very-long-random-string-here-minimum-100-characters
+
+# Google OAuth credentials
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+```
+
+Ensure the Caddy service loads environment variables. Add to `/lib/systemd/system/caddy.service` in the `[Service]` section:
+
+```ini
+EnvironmentFile=/etc/caddy/env.conf
+```
+
+### 6.4. Advanced Transform Rules
+
+Transform rules allow you to configure roles and UI elements for users based on authentication source:
+
+- **match origin local** - for local users
+- **match realm google** - for Google OAuth users
+- **match email** - for specific email addresses
+- **action add role** - assign role to user
+- **ui link** - add link to interface
+
+### 6.5. Additional Authorization Policy Options
+
+- **validate bearer header** - validate JWT tokens in headers
+- **inject headers with claims** - add user information to headers for backend services
+- **acl rule** - detailed access control rules
+
+---
+
+## Step 7: Configuring Additional OAuth Providers
+
+Caddy Security supports various OAuth providers through the generic driver. Example configuration for arbitrary OIDC provider:
+
+```json
+oauth identity provider custom {
+    realm custom
+    driver generic
+    client_id {env.CUSTOM_CLIENT_ID}
+    client_secret {env.CUSTOM_CLIENT_SECRET}
+    server_id {env.CUSTOM_SERVER_ID}
+    tenant_id {env.CUSTOM_TENANT_ID}
+    base_auth_url https://custom-provider.com/oauth2/authorize
+    metadata_url https://custom-provider.com/.well-known/openid_configuration
+    scopes openid email profile
+}
+```
+
+---
+
 ## Additional Tips
+
+### Enhanced Portal UI
+
+Configure a more functional portal interface:
+
+```json
+ui {
+    links {
+        "Dashboard" "/dashboard" icon "las la-tachometer-alt"
+        "My Identity" "/whoami" icon "las la-user"
+        "Portal Settings" "/settings" icon "las la-cog"
+        "Admin Panel" "/admin" icon "las la-tools"
+        "Logs" "/logs" icon "las la-file-alt"
+    }
+    theme dark
+    custom_css_required no
+    custom_js_required no
+}
+```
 
 ### Multiple Domains
 
@@ -395,7 +592,7 @@ authentication portal another_portal {
 }
 ```
 
-### Logging
+### Advanced Logging
 
 Enable debug logs:
 
@@ -405,6 +602,28 @@ Enable debug logs:
 		output file /var/log/caddy/caddy.log
 		level DEBUG
 	}
+}
+```
+
+### Token Lifetime Configuration
+
+Various token settings:
+
+```json
+authentication portal my_portal {
+    crypto default token lifetime 3600    # 1 hour
+    crypto key sign-verify {env.JWT_SHARED_KEY}
+    # Settings for refresh tokens
+    token sources {
+        config {
+            token_lifetime 300      # 5 minutes for access token
+            token_name "access_token"
+        }
+        config {
+            token_lifetime 86400    # 24 hours for refresh token
+            token_name "refresh_token"
+        }
+    }
 }
 ```
 
@@ -418,4 +637,16 @@ Enable debug logs:
 
 ## Conclusion
 
-You now have a fully configured authentication portal with Caddy. This setup is scalable—add users, domains, and policies as needed. For further assistance, refer to the Caddy documentation or ask in the community!
+You now have a comprehensive authentication portal with Caddy supporting both local authentication and OAuth providers. Key features include:
+
+- **Local authentication** with automated user creation via script
+- **OAuth integration** with Google and other providers
+- **Flexible role system** and access control
+- **Advanced capabilities** for validation and header injection
+- **Modern UI** with customizable links
+
+This configuration is easily scalable—add users, domains, authentication providers, and authorization policies according to your needs.
+
+For additional OAuth providers, see the [generic OIDC documentation](https://github.com/authp/authp.github.io/blob/main/assets/conf/oauth/generic/Caddyfile).
+
+For further assistance, refer to the Caddy Security documentation or ask in the community!

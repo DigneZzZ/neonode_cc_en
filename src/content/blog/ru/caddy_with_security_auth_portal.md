@@ -1,11 +1,15 @@
 ---
-title: Как создать портал авторизации для своих доменов с помощью Caddy
-description: Подробная инструкция по сборке Caddy с модулем caddy-security через xcaddy и настройке портала авторизации для защиты ваших доменов.
+title: Ка# Как создать портал авторизации для своих доменов с помощью Caddy
+
+Caddy — это современный веб-сервер с автоматической поддержкой HTTPS через Let's Encrypt. Однако стандартная сборка Caddy не включает модуль `caddy-security`, который необходим для создания портала авторизации и управления доступом к вашим доменам. В этой статье я расскажу, как собрать Caddy с этим модулем с помощью `xcaddy`, настроить портал авторизации с локальной аутентификацией и OAuth провайдерами (Google), и защитить свои веб-приложения.оздать портал авторизации для своих доменов с помощью Caddy
+description: Подробная инструкция по сборке Caddy с модулем caddy-security через xcaddy и настройке портала авторизации с локальной аутентификацией и OAuth провайдерами для защиты ваших доменов.
 tags:
   - Caddy
   - авторизация
   - безопасность
   - xcaddy
+  - OAuth
+  - Google
 series: caddy
 pubDate: 04 09 2025
 ---
@@ -382,7 +386,189 @@ systemctl status caddy
 
 ---
 
+## Шаг 6: Продвинутая настройка - OAuth аутентификация
+
+Помимо локальной аутентификации, Caddy Security поддерживает OAuth провайдеры, такие как Google. Это позволяет пользователям входить в систему с помощью существующих аккаунтов Google.
+
+### 6.1. Настройка Google Cloud Platform
+
+Для интеграции с Google OAuth необходимо настроить проект в Google Cloud Platform:
+
+1. Перейдите в [Google Cloud Console](https://console.cloud.google.com/)
+2. Создайте новый проект или выберите существующий
+3. Перейдите в "API и сервисы" → "Учетные данные"
+4. Нажмите "Настроить экран согласия"
+   - Выберите тип пользователя: "Внешние"
+   - Заполните обязательные поля: название приложения, email разработчика
+   - В разделе "Области" добавьте: `openid`, `email`, `profile`
+5. Создайте OAuth 2.0 Client ID:
+   - Тип приложения: "Веб-приложение"
+   - Добавьте разрешенные URI перенаправления:
+     ```
+     https://auth.example.com/oauth2/google/authorization-code-callback
+     https://auth.example.com/auth/oauth2/google/authorization-code-callback
+     ```
+6. Сохраните Client ID и Client Secret
+
+### 6.2. Обновление конфигурации Caddy
+
+Обновите ваш Caddyfile для поддержки Google OAuth:
+
+```json
+{
+    storage file_system {
+        root /var/lib/caddy
+    }
+    email your-email@example.com
+    order authenticate before respond
+    order authorize before respond
+
+    security {
+        local identity store localdb {
+            realm local
+            path /data/.local/caddy/users.json
+        }
+
+        oauth identity provider google {
+            realm google
+            driver google
+            client_id {env.GOOGLE_CLIENT_ID}.apps.googleusercontent.com
+            client_secret {env.GOOGLE_CLIENT_SECRET}
+            scopes openid email profile
+        }
+
+        authentication portal my_portal {
+            crypto default token lifetime 3600
+            crypto key sign-verify {env.JWT_SHARED_KEY}
+            enable identity store localdb
+            enable identity provider google
+            cookie domain .example.com
+            ui {
+                links {
+                    "Dashboard" "/dashboard" icon "las la-tachometer-alt"
+                    "My Identity" "/auth/whoami" icon "las la-user"
+                    "Portal Settings" "/settings" icon "las la-cog"
+                }
+            }
+            transform user {
+                match origin local
+                action add role authp/user
+                ui link "Portal Settings" /settings icon "las la-cog"
+            }
+            transform user {
+                match origin local
+                match email admin@example.com
+                action add role authp/admin
+            }
+            transform user {
+                match realm google
+                action add role authp/user
+            }
+            transform user {
+                match realm google
+                match email admin@example.com
+                action add role authp/admin
+            }
+        }
+
+        authorization policy my_policy {
+            set auth url /auth
+            crypto key verify {env.JWT_SHARED_KEY}
+            allow roles authp/admin authp/user
+            validate bearer header
+            inject headers with claims
+            acl rule {
+                comment "Allow authenticated users"
+                match role authp/admin authp/user
+                allow stop log info
+            }
+            acl rule {
+                comment "Deny all others"
+                match any
+                deny log warn
+            }
+        }
+    }
+}
+```
+
+### 6.3. Настройка переменных окружения
+
+Создайте файл `/etc/caddy/env.conf` с необходимыми переменными:
+
+```bash
+# JWT ключ для подписи токенов (минимум 100 символов)
+JWT_SHARED_KEY=your-very-long-random-string-here-minimum-100-characters
+
+# Google OAuth credentials
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+```
+
+Убедитесь, что служба Caddy загружает переменные окружения. Добавьте в `/lib/systemd/system/caddy.service` в секцию `[Service]`:
+
+```ini
+EnvironmentFile=/etc/caddy/env.conf
+```
+
+### 6.4. Расширенные transform rules
+
+Transform rules позволяют настраивать роли и UI элементы для пользователей в зависимости от источника аутентификации:
+
+- **match origin local** - для локальных пользователей
+- **match realm google** - для пользователей Google OAuth
+- **match email** - для конкретного email адреса
+- **action add role** - добавление роли пользователю
+- **ui link** - добавление ссылки в интерфейс
+
+### 6.5. Дополнительные опции authorization policy
+
+- **validate bearer header** - проверка JWT токенов в заголовках
+- **inject headers with claims** - добавление информации о пользователе в заголовки запросов к backend сервисам
+- **acl rule** - детальные правила контроля доступа
+
+---
+
+## Шаг 7: Настройка дополнительных OAuth провайдеров
+
+Caddy Security поддерживает различные OAuth провайдеры через generic driver. Пример конфигурации для произвольного OIDC провайдера:
+
+```json
+oauth identity provider custom {
+    realm custom
+    driver generic
+    client_id {env.CUSTOM_CLIENT_ID}
+    client_secret {env.CUSTOM_CLIENT_SECRET}
+    server_id {env.CUSTOM_SERVER_ID}
+    tenant_id {env.CUSTOM_TENANT_ID}
+    base_auth_url https://custom-provider.com/oauth2/authorize
+    metadata_url https://custom-provider.com/.well-known/openid_configuration
+    scopes openid email profile
+}
+```
+
+---
+
 ## Дополнительные советы
+
+### Улучшенный UI портала
+
+Настройте более функциональный интерфейс портала:
+
+```json
+ui {
+    links {
+        "Dashboard" "/dashboard" icon "las la-tachometer-alt"
+        "My Identity" "/whoami" icon "las la-user"
+        "Portal Settings" "/settings" icon "las la-cog"
+        "Admin Panel" "/admin" icon "las la-tools"
+        "Logs" "/logs" icon "las la-file-alt"
+    }
+    theme dark
+    custom_css_required no
+    custom_js_required no
+}
+```
 
 ### Множественные домены
 
@@ -390,21 +576,43 @@ systemctl status caddy
 
 ```json
 authentication portal another_portal {
-	cookie domain .anotherdomain.com
-	...
+    cookie domain .anotherdomain.com
+    ...
 }
 ```
 
-### Логирование
+### Продвинутое логирование
 
 Добавьте отладочные логи:
 
 ```json
 {
-	log {
-		output file /var/log/caddy/caddy.log
-		level DEBUG
-	}
+    log {
+        output file /var/log/caddy/caddy.log
+        level DEBUG
+    }
+}
+```
+
+### Настройка времени жизни токенов
+
+Различные настройки для токенов:
+
+```json
+authentication portal my_portal {
+    crypto default token lifetime 3600    # 1 час
+    crypto key sign-verify {env.JWT_SHARED_KEY}
+    # Настройки для refresh токенов
+    token sources {
+        config {
+            token_lifetime 300      # 5 минут для access token
+            token_name "access_token"
+        }
+        config {
+            token_lifetime 86400    # 24 часа для refresh token
+            token_name "refresh_token"
+        }
+    }
 }
 ```
 
@@ -418,4 +626,16 @@ authentication portal another_portal {
 
 ## Заключение
 
-Теперь у вас есть настроенный портал авторизации на Caddy. Эта конфигурация масштабируема — добавляйте пользователей, домены и политики по вашим задачам. Если возникнут вопросы, загляните в документацию Caddy или спросите в сообществе!
+Теперь у вас есть полноценный портал авторизации на Caddy с поддержкой как локальной аутентификации, так и OAuth провайдеров. Основные возможности включают:
+
+- **Локальная аутентификация** с автоматическим созданием пользователей через скрипт
+- **OAuth интеграция** с Google и другими провайдерами
+- **Гибкая система ролей** и прав доступа
+- **Расширенные возможности** валидации и инъекции заголовков
+- **Современный UI** с настраиваемыми ссылками
+
+Эта конфигурация легко масштабируется — добавляйте пользователей, домены, провайдеры аутентификации и политики авторизации в соответствии с вашими потребностями. 
+
+Для дополнительных OAuth провайдеров см. [документацию по generic OIDC](https://github.com/authp/authp.github.io/blob/main/assets/conf/oauth/generic/Caddyfile).
+
+Если возникнут вопросы, загляните в документацию Caddy Security или спросите в сообществе!
