@@ -192,6 +192,5 @@ cat wgcf-profile.conf
 ## Полезные ссылки
 
 - [Wgcf GitHub Releases](https://github.com/ViRb3/wgcf/releases)
-- [Telegram канал NeoNode.cc](https://t.me/neonode_cc)
-- [Telegram сообщество NeoNode](https://t.me/+cFdHT8DiMUA2MWVi)
+- [Telegram канал GIG.ovh](https://t.me/gig_ovh)
 

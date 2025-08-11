@@ -107,7 +107,7 @@ You can also share feedback, suggestions, or just say hi in the official discuss
 ---
 ## ❓ Questions or Feedback
 
-Want to suggest a feature, contribute a block, or found a bug? Reach out in [our Telegram](https://t.me/neonode_cc) or open an issue.
+Want to suggest a feature, contribute a block, or found a bug? Reach out in [our Telegram](https://t.me/gig_ovh) or open an issue.
 
 ---
 

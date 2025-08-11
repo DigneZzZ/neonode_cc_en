@@ -58,7 +58,7 @@ export const SOCIAL_LINKS: Array<SocialLink> = [
  {
     icon: "mdi:telegram",
     friendlyName: "Telegram",
-    link: "https://t.me/+cFdHT8DiMUA2MWVi",
+    link: "https://t.me/gig_ovh",
   },
  /**   {
     icon: "mdi:email",

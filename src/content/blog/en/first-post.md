@@ -28,9 +28,7 @@ It’s time to share the development plans for the project.
 - More free articles will be available.
 - The project aims to expand the audience and make it accessible to an international audience.
 
-**The project has its own Telegram channel: https://t.me/neonode_cc**
-
-**The project also has its own Telegram community: https://t.me/+cFdHT8DiMUA2MWVi**
+**The project has its own Telegram channel: https://t.me/gig_ovh**
 
 - I will be sharing my entire set of useful tools and scripts on this project.
 

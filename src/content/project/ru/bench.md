@@ -1,51 +1,63 @@
 ---
-title: 'Bench.Openode.xyz'
+title: 'Bench.GIG.ovh'
 description: 'Постоянно актуализируемый набор бенчмарков'
 pubDate: '09 10 2024'
 heroImage:
     url: '/images/bench.webp'
     alt: 'BENCHMARK SERVER'
 platform: web
-website: https://bench.openode.xyz
+website: https://bench.gig.ovh
 order: 3
 ---
 
 > **Обновление:** Новые инструменты и обсуждения теперь доступны на форуме [GIG.ovh](https://gig.ovh).
 
-## На странице представлены все основные и популярные бенчмарки для тестирование доступности серверов.
+## На странице представлены все основные и популярные бенчмарки для тестирование доступности серверов
 
 ```bash
-wget -qO- bench.openode.xyz | bash
+wget -qO- bench.gig.ovh | bash
 ```
 
-### This script is Net Checker Script:
+Для получения дополнительной информации посетите наш официальный сайт.
+
+### This script is Net Checker Script
 
 ```bash
-bash (curl -L -s https://bench.openode.xyz/checker.sh)
+bash <(curl -L -s https://bench.gig.ovh/checker.sh)
 ```
 
-### Use this command for Inst Check:
+### Use this command for Inst Check
 
 ```bash
-bash (curl -L -s https://bench.openode.xyz/checker_inst.sh)
+bash <(curl -L -s https://bench.gig.ovh/checker_inst.sh)
 ```
 
-### MultiCheck Script RU:
+### MultiCheck Script RU
 
 ```bash
-bash (curl -L -s https://bench.openode.xyz/multi_check_ru.sh)
+bash <(curl -L -s https://bench.gig.ovh/multi_check_ru.sh)
 ```
 
-### MultiCheck Script EN:
+### MultiCheck Script EN
 
 ```bash
-bash (curl -L -s https://bench.openode.xyz/multi_check.sh)
+bash <(curl -L -s https://bench.gig.ovh/multi_check.sh)
 ```
-### Media Bench 
+
+### IP Region Checker
+
+```bash
+bash <(curl -L -s https://bench.gig.ovh/ipregion.sh)
+```
+
+### Media Bench
+
 ```bash
 bash <(curl -L -s check.unlock.media) -E en
 ```
+
 ### Access bench
+
 ```bash
 bash <(curl -Ls IP.Check.Place) -l en
 ```

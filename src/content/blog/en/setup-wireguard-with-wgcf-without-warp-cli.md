@@ -188,5 +188,4 @@ If you use XRAY or another proxy engine, this method works well for routing part
 ## Useful Links
 
 - [Wgcf GitHub Releases](https://github.com/ViRb3/wgcf/releases)
-- [NeoNode.cc Telegram Channel](https://t.me/neonode_cc)
-- [NeoNode Telegram Community](https://t.me/+cFdHT8DiMUA2MWVi)
+- [GIG.ovh Telegram Channel](https://t.me/gig_ovh)

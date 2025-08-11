@@ -1,51 +1,63 @@
 ---
-title: 'Bench.Openode.xyz'
+title: 'Bench.GIG.ovh'
 description: 'Most usefull benchmarks for your VPS server'
 pubDate: '09 10 2024'
 heroImage:
     url: '/images/bench.webp'
     alt: 'BENCHMARK SERVER'
 platform: web
-website: https://bench.openode.xyz
+website: https://bench.gig.ovh
 order: 3
 ---
 
 > **Update:** New tools and discussions are now available on the [GIG.ovh](https://gig.ovh) forum.
 
-## This script is designed to run various benchmark tests on your system  (incl: i\o speed, speedtest to dif servers). To use the script, simply execute the following command:
+## This script is designed to run various benchmark tests on your system (incl: i\o speed, speedtest to dif servers). To use the script, simply execute the following command
 
 ```bash
-wget -qO- bench.openode.xyz | bash
+wget -qO- bench.gig.ovh | bash
 ```
 
-### This script is Net Checker Script:
+For more details, visit our official website.
+
+### This script is Net Checker Script
 
 ```bash
-bash (curl -L -s https://bench.openode.xyz/checker.sh)
+bash <(curl -L -s https://bench.gig.ovh/checker.sh)
 ```
 
-### Use this command for Inst Check:
+### Use this command for Inst Check
 
 ```bash
-bash (curl -L -s https://bench.openode.xyz/checker_inst.sh)
+bash <(curl -L -s https://bench.gig.ovh/checker_inst.sh)
 ```
 
-### MultiCheck Script RU:
+### MultiCheck Script RU
 
 ```bash
-bash (curl -L -s https://bench.openode.xyz/multi_check_ru.sh)
+bash <(curl -L -s https://bench.gig.ovh/multi_check_ru.sh)
 ```
 
-### MultiCheck Script EN:
+### MultiCheck Script EN
 
 ```bash
-bash (curl -L -s https://bench.openode.xyz/multi_check.sh)
+bash <(curl -L -s https://bench.gig.ovh/multi_check.sh)
 ```
-### Media Bench 
+
+### IP Region Checker
+
+```bash
+bash <(curl -L -s https://bench.gig.ovh/ipregion.sh)
+```
+
+### Media Bench
+
 ```bash
 bash <(curl -L -s check.unlock.media) -E en
 ```
+
 ### Access bench
+
 ```bash
 bash <(curl -Ls IP.Check.Place) -l en
 ```
