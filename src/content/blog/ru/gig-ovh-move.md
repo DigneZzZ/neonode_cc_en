@@ -2,9 +2,9 @@
 title: Переход на форум GIG.ovh
 description: Блог NeoNode.cc больше не будет обновляться. Все новые статьи и полезная информация теперь публикуются на форуме GIG.ovh.
 tags:
-	- announcement
-	- gig.ovh
-	- neonode
+  - announcement
+  - gig.ovh
+  - neonode
 series: neonode
 draft: false
 pubDate: 08 11 2025

@@ -8,8 +8,10 @@ heroImage:
 platform: Web
 website: https://openode.xyz
 tgGroup: https://t.me/+v8dK84LYCAhmOTcy
-order: 1
+order: 2
 ---
+
+> **Обновление:** Новые материалы и обсуждения теперь публикуются на форуме [GIG.ovh](https://gig.ovh). Присоединяйтесь к актуальным дискуссиям!
 
 На форуме [openode.xyz](https://openode.xyz) обсуждаются различные темы, связанные с IT, программированием и технологиями. Популярные категории включают:
 

@@ -2,9 +2,9 @@
 title: Moving to GIG.ovh Forum
 description: NeoNode.cc will no longer be updated. All new articles and useful information will be published only on the GIG.ovh forum.
 tags:
-	- announcement
-	- gig.ovh
-	- neonode
+  - announcement
+  - gig.ovh
+  - neonode
 series: neonode
 draft: false
 pubDate: 08 11 2025

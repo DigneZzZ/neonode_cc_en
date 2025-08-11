@@ -10,6 +10,7 @@ website: https://bench.openode.xyz
 order: 3
 ---
 
+> **Update:** New tools and discussions are now available on the [GIG.ovh](https://gig.ovh) forum.
 
 ## This script is designed to run various benchmark tests on your system  (incl: i\o speed, speedtest to dif servers). To use the script, simply execute the following command:
 
